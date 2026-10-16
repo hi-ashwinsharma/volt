@@ -1,3 +1,5 @@
 export * from "./client";
 export * from "./schema";
 export * from "./repositories";
+export * from "./migrate";
+export * from "./seed";

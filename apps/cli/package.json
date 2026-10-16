@@ -1,0 +1,28 @@
+{
+  "name": "@volt/cli",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "volt": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "bun src/index.ts",
+    "build": "bun build src/index.ts --compile --outfile ./volt",
+    "infra:setup": "bun src/commands/infra-setup.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@volt/config": "workspace:*",
+    "@volt/db": "workspace:*",
+    "@volt/math": "workspace:*",
+    "@volt/policy": "workspace:*",
+    "@volt/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.4",
+    "typescript": "^5.7.3"
+  }
+}
