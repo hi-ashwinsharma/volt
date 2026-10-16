@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Chip } from "@heroui/react";
+import { Card, Chip, Surface, Typography } from "@heroui/react";
 import { calculateCommitWeightage } from "@volt/math";
 import { canReviewCommit } from "@volt/policy";
 import type {
@@ -53,11 +53,11 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
   };
 
   return (
-    <Card className="apple-surface rounded-[24px] p-6 space-y-5">
+    <Card variant="default" className="rounded-2xl border border-border p-6 space-y-5">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left 7 Columns: Context & Evidence */}
         <div className="lg:col-span-7 space-y-3.5">
-          <div className="flex flex-wrap items-center gap-2 text-[11px]">
+          <div className="flex flex-wrap items-center gap-2 text-xs">
             <Chip size="sm" variant="secondary" className="font-mono font-medium">
               <Chip.Label>{commit.shortHash}</Chip.Label>
             </Chip>
@@ -67,41 +67,43 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
             <Chip size="sm" variant="secondary" className="capitalize font-medium">
               <Chip.Label>{commit.domain}</Chip.Label>
             </Chip>
-            <span className="text-ink-tertiary">·</span>
-            <span className="font-mono text-ink-secondary">by @{commit.authorHandle}</span>
+            <Typography type="body-xs" color="muted">·</Typography>
+            <Typography type="body-xs" color="muted" className="font-mono">by @{commit.authorHandle}</Typography>
           </div>
 
-          <h3 className="text-[17px] font-semibold tracking-[-0.018em] text-ink-primary leading-snug">
+          <Typography type="h3" className="font-semibold tracking-tight text-foreground leading-snug">
             {commit.summary}
-          </h3>
+          </Typography>
 
           {commit.artifactType === "github_app" && commit.githubPrUrl && (
-            <div className="apple-inset rounded-[14px] p-3.5 flex items-center justify-between gap-3 text-[12px]">
+            <Surface variant="secondary" className="rounded-xl border border-border p-3.5 flex items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
-                <GitPullRequest className="h-4 w-4 text-accent-blue" aria-hidden="true" />
-                <span className="font-medium text-ink-primary">GitHub App Verified Pull Request</span>
+                <GitPullRequest className="h-4 w-4 text-accent" aria-hidden="true" />
+                <Typography type="body-sm" className="font-medium">GitHub App Verified Pull Request</Typography>
               </div>
-              <a href={commit.githubPrUrl} target="_blank" rel="noreferrer" className="text-[11px] font-mono text-accent-blue hover:underline">
+              <a href={commit.githubPrUrl} target="_blank" rel="noreferrer" className="text-xs font-mono text-accent hover:underline">
                 View Pull Request →
               </a>
-            </div>
+            </Surface>
           )}
 
           {commit.artifactType === "file_upload" && (
-            <div className="apple-inset rounded-[14px] p-3.5 flex items-center gap-2 text-[12px]">
-              <FileCode2 className="h-4 w-4 text-accent-indigo" aria-hidden="true" />
-              <span className="font-medium text-ink-primary">Verified .ipynb Empirical Benchmark Notebook</span>
-            </div>
+            <Surface variant="secondary" className="rounded-xl border border-border p-3.5 flex items-center gap-2 text-xs">
+              <FileCode2 className="h-4 w-4 text-accent" aria-hidden="true" />
+              <Typography type="body-sm" className="font-medium">Verified .ipynb Empirical Benchmark Notebook</Typography>
+            </Surface>
           )}
 
           {audit && (
-            <div className="apple-inset rounded-[14px] p-4 text-[12px] space-y-1.5">
-              <div className="flex items-center gap-1.5 font-medium text-accent-emerald text-[11px]">
+            <Surface variant="secondary" className="rounded-xl border border-border p-4 text-xs space-y-1.5">
+              <div className="flex items-center gap-1.5 font-medium text-success text-[11px]">
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Gemini 1.5 Flash AI Judge Recommendation</span>
+                <Typography type="body-xs" className="font-medium text-success">Gemini 1.5 Flash AI Judge Recommendation</Typography>
               </div>
-              <p className="text-ink-secondary leading-relaxed">{audit.reasoning}</p>
-            </div>
+              <Typography type="body-sm" color="muted" className="leading-relaxed">
+                {audit.reasoning}
+              </Typography>
+            </Surface>
           )}
         </div>
 

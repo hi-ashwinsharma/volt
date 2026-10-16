@@ -15,7 +15,7 @@ export default function SettingsIntegrationsPage() {
   const state = useVoltWorkspace();
 
   return (
-    <div className="min-h-screen bg-canvas pb-20">
+    <div className="min-h-screen bg-background text-foreground pb-20">
       <NavigationHeader
         userHandle={state.currentUser.handle}
         availableHandles={state.availablePersonas.map((p) => p.handle)}

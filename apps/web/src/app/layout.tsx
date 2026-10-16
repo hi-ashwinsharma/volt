@@ -14,11 +14,11 @@ export default function RootLayout({
   readonly children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
+    <html lang="en" className="dark" data-theme="dark" suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light dark" />
       </head>
-      <body className="min-h-screen bg-canvas text-ink-primary antialiased">
+      <body className="min-h-screen bg-background text-foreground antialiased font-sans">
         <VoltWorkspaceProvider>{children}</VoltWorkspaceProvider>
       </body>
     </html>

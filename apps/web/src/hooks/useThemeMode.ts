@@ -15,12 +15,16 @@ export function useThemeMode() {
           ? "light"
           : "dark";
     setTheme(initial);
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(initial);
     document.documentElement.setAttribute("data-theme", initial);
   }, []);
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => {
       const next: ThemeMode = prev === "dark" ? "light" : "dark";
+      document.documentElement.classList.remove("light", "dark");
+      document.documentElement.classList.add(next);
       document.documentElement.setAttribute("data-theme", next);
       window.localStorage.setItem("volt-theme", next);
       return next;
