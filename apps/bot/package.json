@@ -1,0 +1,23 @@
+{
+  "name": "@volt/bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@volt/config": "workspace:*",
+    "@volt/math": "workspace:*",
+    "@volt/policy": "workspace:*",
+    "@volt/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.4",
+    "typescript": "^5.8.2"
+  }
+}

@@ -1,0 +1,19 @@
+[package]
+name = "volt-mac-overlay"
+version = "1.0.0"
+description = "volt — Native macOS Spotlight Quick-Entry Overlay (Cmd + Shift + L)"
+authors = ["Ashwin Sharma"]
+edition = "2021"
+
+[lib]
+name = "volt_mac_overlay_lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "volt-mac-overlay"
+path = "src/main.rs"
+
+[dependencies]
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
