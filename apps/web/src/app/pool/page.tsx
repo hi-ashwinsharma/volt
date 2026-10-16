@@ -39,16 +39,19 @@ export default function PoolShareMatrixPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090B]">
+    <div className="min-h-screen bg-canvas">
       <NavigationHeader
         userHandle={state.currentUser.handle}
         pendingReviewsCount={
           state.commits.filter((c) => c.status === "pending_peer").length
         }
+        stagedLogsCount={state.stagedLogs.length}
+        theme={state.theme}
+        onToggleTheme={state.toggleTheme}
         onOpenCommandPalette={() => state.setIsPaletteOpen(true)}
       />
 
-      <main className="mx-auto max-w-6xl space-y-6 px-6 py-8">
+      <main className="mx-auto max-w-5xl space-y-6 px-6 py-8">
         <PoolMatrixTable
           summary={gov.poolSummary}
           canManageCycles={state.currentUser.scopes.includes("cycle:manage")}
@@ -61,6 +64,8 @@ export default function PoolShareMatrixPage() {
         onClose={() => state.setIsPaletteOpen(false)}
         onNavigate={(route) => router.push(route)}
         onQuickStage={(txt) => state.handleStageLog(txt, null)}
+        theme={state.theme}
+        onToggleTheme={state.toggleTheme}
       />
     </div>
   );

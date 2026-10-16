@@ -23,6 +23,23 @@ import type {
 } from "./pbac.types";
 
 export type CommandBarCaptureMode = "stage" | "commit";
+export type ThemeMode = "dark" | "light";
+
+export interface NavigationHeaderProps {
+  readonly userHandle: string;
+  readonly pendingReviewsCount: number;
+  readonly stagedLogsCount: number;
+  readonly theme: ThemeMode;
+  readonly onToggleTheme: () => void;
+  readonly onOpenCommandPalette: () => void;
+}
+
+export interface ExecutiveKpiStripProps {
+  readonly summary: CyclePoolShareSummary;
+  readonly currentUserHandle: string;
+  readonly stagedCount: number;
+  readonly pendingReviewCount: number;
+}
 
 export interface TopCaptureBarProps {
   readonly stagedLogs: readonly StagedLogRecord[];
@@ -130,4 +147,6 @@ export interface CommandPaletteProps {
   readonly onClose: () => void;
   readonly onNavigate: (route: string) => void;
   readonly onQuickStage: (text: string) => Promise<void>;
+  readonly theme?: ThemeMode;
+  readonly onToggleTheme?: () => void;
 }

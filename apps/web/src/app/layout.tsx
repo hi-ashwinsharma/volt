@@ -13,8 +13,11 @@ export default function RootLayout({
   readonly children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen bg-[#09090B] text-zinc-50 antialiased">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <meta name="color-scheme" content="light dark" />
+      </head>
+      <body className="min-h-screen bg-canvas text-ink-primary antialiased">
         {children}
       </body>
     </html>

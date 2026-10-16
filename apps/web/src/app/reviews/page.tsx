@@ -33,26 +33,29 @@ export default function PeerReviewsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#09090B]">
+    <div className="min-h-screen bg-canvas">
       <NavigationHeader
         userHandle={state.currentUser.handle}
         pendingReviewsCount={
           pendingCoAuthorCommits.length + pendingPeerCommits.length
         }
+        stagedLogsCount={state.stagedLogs.length}
+        theme={state.theme}
+        onToggleTheme={state.toggleTheme}
         onOpenCommandPalette={() => state.setIsPaletteOpen(true)}
       />
 
-      <main className="mx-auto max-w-6xl space-y-8 px-6 py-8">
-        <section className="space-y-4">
+      <main className="mx-auto max-w-5xl space-y-8 px-6 py-8">
+        <section className="space-y-3.5">
           <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-cyan-400" aria-hidden="true" />
-            <h1 className="text-base font-semibold text-zinc-100">
-              Sequential Co-Author Handshake Inbox (Pre-AI Judge Gate)
+            <Users className="h-4 w-4 text-ink-secondary" aria-hidden="true" />
+            <h1 className="text-[16px] font-semibold tracking-[-0.02em] text-ink-primary">
+              Sequential Co-Author Handshake Inbox
             </h1>
           </div>
           {pendingCoAuthorCommits.length === 0 ? (
-            <div className="volt-glass rounded-2xl p-5 text-xs text-zinc-400">
-              Zero pending co-author handshakes awaiting your verification.
+            <div className="apple-surface rounded-[20px] p-5 text-[13px] text-ink-secondary">
+              Zero pending co-author handshakes awaiting verification.
             </div>
           ) : (
             pendingCoAuthorCommits.map((c) => (
@@ -66,15 +69,15 @@ export default function PeerReviewsPage() {
           )}
         </section>
 
-        <section className="space-y-4">
+        <section className="space-y-3.5">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-amber-400" aria-hidden="true" />
-            <h2 className="text-base font-semibold text-zinc-100">
-              High-Stakes Peer Review Queue (Initial Score &gt; 15.00 pts)
+            <ShieldCheck className="h-4 w-4 text-ink-secondary" aria-hidden="true" />
+            <h2 className="text-[16px] font-semibold tracking-[-0.02em] text-ink-primary">
+              High-Stakes Peer Review Queue (&gt; 15.00 pts)
             </h2>
           </div>
           {pendingPeerCommits.length === 0 ? (
-            <div className="volt-glass rounded-2xl p-5 text-xs text-zinc-400">
+            <div className="apple-surface rounded-[20px] p-5 text-[13px] text-ink-secondary">
               All high-stakes commits have been reviewed and finalized.
             </div>
           ) : (
@@ -100,6 +103,8 @@ export default function PeerReviewsPage() {
         onClose={() => state.setIsPaletteOpen(false)}
         onNavigate={(route) => router.push(route)}
         onQuickStage={(txt) => state.handleStageLog(txt, null)}
+        theme={state.theme}
+        onToggleTheme={state.toggleTheme}
       />
     </div>
   );

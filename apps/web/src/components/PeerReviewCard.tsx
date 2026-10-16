@@ -12,7 +12,7 @@ import {
   type ImpactMultiplier,
   type PeerReviewCardProps,
 } from "@volt/types";
-import { Check, ShieldCheck, Sliders, X } from "lucide-react";
+import { Check, ShieldCheck, X } from "lucide-react";
 import { useState } from "react";
 
 export function CoAuthorHandshakeCard(props: CoAuthorHandshakeCardProps) {
@@ -20,26 +20,28 @@ export function CoAuthorHandshakeCard(props: CoAuthorHandshakeCardProps) {
   const { commit } = props;
 
   return (
-    <div className="volt-glass rounded-2xl p-5">
-      <div className="flex items-center justify-between">
-        <span className="font-mono text-xs text-cyan-300">
-          [{commit.shortHash}] Co-Author Handshake Request from @{commit.authorHandle}
-        </span>
-        <span className="font-mono text-xs text-zinc-400">24h window</span>
+    <div className="apple-surface rounded-[20px] p-5">
+      <div className="flex items-center justify-between text-[12px]">
+        <div className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-status-warn" />
+          <span className="font-mono text-ink-secondary">[{commit.shortHash}]</span>
+          <span className="font-medium text-ink-primary">Co-Author Handshake from @{commit.authorHandle}</span>
+        </div>
+        <span className="font-mono text-[11px] text-ink-tertiary">24h window</span>
       </div>
-      <p className="mt-2 text-sm font-medium text-zinc-100">{commit.summary}</p>
+      <p className="mt-2.5 text-[14px] font-medium leading-relaxed text-ink-primary">{commit.summary}</p>
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         <input
           type="text"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Describe your specific 1-line contribution to unlock AI Judge grading..."
-          className="flex-1 rounded-xl border border-white/[0.08] bg-zinc-950 px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none"
+          placeholder="Describe your 1-line contribution to unlock AI Judge grading..."
+          className="apple-inset flex-1 rounded-full px-4 py-2 text-[12px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
         />
         <button
           type="button"
           onClick={() => props.onVerifyHandshake(commit.shortHash, "verify", note)}
-          className="flex items-center gap-1.5 rounded-xl bg-emerald-500 px-4 py-2 text-xs font-semibold text-zinc-950 transition hover:bg-emerald-400"
+          className="apple-btn-primary flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-medium"
         >
           <Check className="h-3.5 w-3.5" aria-hidden="true" />
           <span>Verify & Unlock</span>
@@ -47,10 +49,10 @@ export function CoAuthorHandshakeCard(props: CoAuthorHandshakeCardProps) {
         <button
           type="button"
           onClick={() => props.onVerifyHandshake(commit.shortHash, "reject")}
-          className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-medium text-rose-300 transition hover:bg-rose-500/20"
+          className="apple-pill flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-[12px] font-medium text-status-danger"
         >
           <X className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>Reject Tag</span>
+          <span>Reject</span>
         </button>
       </div>
     </div>
@@ -93,73 +95,72 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
   };
 
   return (
-    <div className="volt-glass rounded-2xl p-5">
+    <div className="apple-surface rounded-[20px] p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-xs text-amber-300">{commit.shortHash}</span>
-          <span className="text-xs text-zinc-300">
-            by <strong className="font-mono">@{commit.authorHandle}</strong> ({commit.domain})
+        <div className="flex items-center gap-2 text-[12px]">
+          <span className="h-1.5 w-1.5 rounded-full bg-status-warn" />
+          <span className="rounded-[6px] border border-border-subtle bg-control px-2 py-0.5 font-mono text-[11px] text-ink-secondary">{commit.shortHash}</span>
+          <span className="text-ink-secondary">
+            by <strong className="font-mono text-ink-primary">@{commit.authorHandle}</strong> · <span className="capitalize">{commit.domain}</span>
           </span>
         </div>
-        <span className="font-mono text-sm font-semibold text-emerald-400">
-          Preview W_c: {livePreview.finalPoints.toFixed(2)} pts
-        </span>
+        <div className="text-right">
+          <span className="text-[11px] text-ink-tertiary">Live Preview </span>
+          <span className="font-mono text-[20px] font-semibold tracking-[-0.03em] tabular-nums text-ink-primary">{livePreview.finalPoints.toFixed(2)}</span>
+          <span className="ml-1 text-[11px] text-ink-tertiary">pts</span>
+        </div>
       </div>
 
-      <p className="mt-2 text-sm text-zinc-100">{commit.summary}</p>
-      {audit && <p className="mt-1 text-xs text-zinc-400">AI Judge Rationale: {audit.reasoning}</p>}
+      <p className="mt-2.5 text-[15px] font-medium leading-relaxed text-ink-primary">{commit.summary}</p>
+      {audit && <p className="mt-1 text-[12px] text-ink-secondary">AI Judge Rationale: {audit.reasoning}</p>}
 
       {!guard.allowed ? (
-        <div className="mt-4 rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-2.5 text-xs text-amber-300">
-          PBAC Conflict-of-Interest Guard Active ({guard.reason}): Primary authors and co-authors cannot self-review their own high-stakes commits.
+        <div className="apple-inset mt-4 flex items-center gap-2.5 rounded-[14px] px-4 py-3 text-[12px] text-ink-secondary">
+          <span className="h-2 w-2 shrink-0 rounded-full bg-status-warn" />
+          <span>Conflict-of-Interest Guard ({guard.reason}): Primary authors and co-authors cannot self-review their own high-stakes commits.</span>
         </div>
       ) : (
-        <div className="mt-4 space-y-4 border-t border-white/[0.07] pt-4">
+        <div className="mt-4 space-y-4 border-t border-border-subtle pt-4">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-            <div>
-              <label className="block font-mono text-[11px] text-zinc-400">Consensus Slider V ({vConsensus.toFixed(2)}x)</label>
-              <input
-                type="range"
-                min="0.70"
-                max="1.30"
-                step="0.05"
-                value={vConsensus}
-                onChange={(e) => setVConsensus(Number(e.target.value))}
-                className="mt-2 w-full accent-emerald-400"
-              />
+            <div className="apple-inset rounded-[12px] p-3">
+              <div className="flex justify-between text-[11px]">
+                <span className="text-ink-secondary">Consensus (V)</span>
+                <span className="font-mono font-semibold tabular-nums text-ink-primary">{vConsensus.toFixed(2)}×</span>
+              </div>
+              <input type="range" min="0.70" max="1.30" step="0.05" value={vConsensus} onChange={(e) => setVConsensus(Number(e.target.value))} className="mt-2.5 w-full" />
             </div>
 
-            <div>
-              <label className="block font-mono text-[11px] text-zinc-400">Complexity (C)</label>
-              <select
-                value={overrideC}
-                onChange={(e) => setOverrideC(Number(e.target.value) as ComplexityScore)}
-                className="mt-1 w-full rounded-lg border border-white/[0.08] bg-zinc-900 px-2.5 py-1.5 font-mono text-xs text-zinc-100"
-              >
-                {COMPLEXITY_SCORES.map((c) => <option key={c} value={c}>C = {c}</option>)}
-              </select>
+            <div className="apple-inset rounded-[12px] p-3">
+              <span className="block text-[11px] text-ink-secondary">Complexity (C)</span>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {COMPLEXITY_SCORES.map((c) => (
+                  <button key={c} type="button" onClick={() => setOverrideC(c)} className={`rounded-[6px] px-2 py-0.5 font-mono text-[11px] transition-all ${overrideC === c ? "bg-segmented-active font-semibold text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"}`}>
+                    {c}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div>
-              <label className="block font-mono text-[11px] text-zinc-400">Impact (I)</label>
-              <select
-                value={overrideI}
-                onChange={(e) => setOverrideI(Number(e.target.value) as ImpactMultiplier)}
-                className="mt-1 w-full rounded-lg border border-white/[0.08] bg-zinc-900 px-2.5 py-1.5 font-mono text-xs text-zinc-100"
-              >
-                {IMPACT_MULTIPLIERS.map((i) => <option key={i} value={i}>I = {i}x</option>)}
-              </select>
+            <div className="apple-inset rounded-[12px] p-3">
+              <span className="block text-[11px] text-ink-secondary">Impact (I)</span>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {IMPACT_MULTIPLIERS.map((i) => (
+                  <button key={i} type="button" onClick={() => setOverrideI(i)} className={`rounded-[6px] px-2 py-0.5 font-mono text-[11px] transition-all ${overrideI === i ? "bg-segmented-active font-semibold text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"}`}>
+                    {i}×
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div>
-              <label className="block font-mono text-[11px] text-zinc-400">Evidence (E)</label>
-              <select
-                value={overrideE}
-                onChange={(e) => setOverrideE(Number(e.target.value) as EvidenceMultiplier)}
-                className="mt-1 w-full rounded-lg border border-white/[0.08] bg-zinc-900 px-2.5 py-1.5 font-mono text-xs text-zinc-100"
-              >
-                {EVIDENCE_MULTIPLIERS.map((ev) => <option key={ev} value={ev}>E = {ev}x</option>)}
-              </select>
+            <div className="apple-inset rounded-[12px] p-3">
+              <span className="block text-[11px] text-ink-secondary">Evidence (E)</span>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {EVIDENCE_MULTIPLIERS.map((ev) => (
+                  <button key={ev} type="button" onClick={() => setOverrideE(ev)} className={`rounded-[6px] px-2 py-0.5 font-mono text-[11px] transition-all ${overrideE === ev ? "bg-segmented-active font-semibold text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"}`}>
+                    {ev}×
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -168,25 +169,15 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
               type="text"
               value={reasoning}
               onChange={(e) => setReasoning(e.target.value)}
-              placeholder="Mandatory audit reasoning recorded in append-only score_audits..."
-              className="flex-1 rounded-xl border border-white/[0.08] bg-zinc-950 px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none"
+              placeholder="Mandatory audit note for append-only score_audits ledger..."
+              className="apple-inset flex-1 rounded-full px-4 py-2 text-[12px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
             />
-            <button
-              type="button"
-              disabled={reasoning.trim().length < 5}
-              onClick={() => submitDecision("approve")}
-              className="flex items-center gap-1.5 rounded-xl bg-emerald-500 px-4 py-2 text-xs font-semibold text-zinc-950 transition hover:bg-emerald-400 disabled:opacity-40"
-            >
+            <button type="button" disabled={reasoning.trim().length < 5} onClick={() => submitDecision("approve")} className="apple-btn-primary flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-medium disabled:opacity-35">
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Approve Score</span>
             </button>
-            <button
-              type="button"
-              disabled={reasoning.trim().length < 5}
-              onClick={() => submitDecision("reject")}
-              className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-medium text-rose-300 disabled:opacity-40"
-            >
-              <Sliders className="h-3.5 w-3.5" aria-hidden="true" />
+            <button type="button" disabled={reasoning.trim().length < 5} onClick={() => submitDecision("reject")} className="apple-pill flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-medium text-status-danger disabled:opacity-35">
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Reject</span>
             </button>
           </div>
