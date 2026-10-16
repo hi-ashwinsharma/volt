@@ -17,7 +17,7 @@ export function LiveStagingRail(props: LiveStagingRailProps) {
   return (
     <aside aria-label="Live Staging Buffer and Conceptual Model" className="space-y-4">
       {/* Live Staging Buffer Card */}
-      <div className="apple-surface rounded-[20px] p-4.5">
+      <div className="apple-surface rounded-[20px] p-5 sm:p-6">
         <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-status-ok animate-pulse" />
@@ -86,7 +86,7 @@ export function LiveStagingRail(props: LiveStagingRailProps) {
       </div>
 
       {/* Don Norman Conceptual Model: The Math Engine at a glance */}
-      <div className="apple-surface rounded-[20px] p-4.5 text-[11px]">
+      <div className="apple-surface rounded-[20px] p-5 text-[11px]">
         <div className="flex items-center gap-1.5 font-semibold text-ink-primary mb-2">
           <Terminal className="h-3.5 w-3.5 text-accent-emerald" aria-hidden="true" />
           <span>Weightage Formula Model</span>
@@ -94,7 +94,7 @@ export function LiveStagingRail(props: LiveStagingRailProps) {
         <p className="text-ink-tertiary leading-relaxed">
           Deliverable value (<span className="font-mono text-ink-secondary">W_c</span>) is mathematically determined:
         </p>
-        <div className="apple-inset mt-2 p-2 rounded-[10px] font-mono text-[10px] text-ink-primary text-center">
+        <div className="apple-inset mt-2 p-3 rounded-[12px] font-mono text-[10px] text-ink-primary text-center">
           W_c = (C<sup>1.4</sup> × I × E) × V × D
         </div>
         <ul className="mt-2.5 space-y-1 text-ink-tertiary">

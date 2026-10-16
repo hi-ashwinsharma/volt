@@ -9,7 +9,7 @@ export function CoAuthorHandshakeCard(props: CoAuthorHandshakeCardProps) {
   const { commit } = props;
 
   return (
-    <div className="apple-surface rounded-[20px] p-5">
+    <div className="apple-surface rounded-[20px] p-5 sm:p-6">
       <div className="flex items-center justify-between text-[12px]">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-status-warn animate-pulse" />

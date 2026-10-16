@@ -30,7 +30,7 @@ export function ReviewWorkbenchCalibration(props: ReviewWorkbenchCalibrationProp
   } = props;
 
   return (
-    <div className="lg:col-span-5 apple-inset rounded-[18px] p-4.5 space-y-4">
+    <div className="lg:col-span-5 apple-inset rounded-[18px] p-5 sm:p-6 space-y-4">
       <div className="flex items-baseline justify-between border-b border-border-subtle pb-3">
         <div>
           <span className="text-[11px] font-medium text-ink-tertiary uppercase tracking-wider">

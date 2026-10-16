@@ -55,7 +55,7 @@ export function CommitCard(props: CommitCardProps) {
         : { dotClass: "bg-status-warn", label: "Co-Author Handshake", textClass: "text-accent-amber" };
 
   return (
-    <article className="apple-surface rounded-[20px] p-5.5 relative">
+    <article className="apple-surface rounded-[20px] p-5 sm:p-6 relative">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
         <div className="min-w-0 flex-1 space-y-2">
           {/* Metadata Row */}

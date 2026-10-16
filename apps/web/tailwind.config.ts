@@ -51,6 +51,10 @@ const config: Config = {
       transitionTimingFunction: {
         apple: "cubic-bezier(0.22, 1, 0.36, 1)",
       },
+      spacing: {
+        "4.5": "1.125rem",
+        "5.5": "1.375rem",
+      },
     },
   },
   plugins: [],
