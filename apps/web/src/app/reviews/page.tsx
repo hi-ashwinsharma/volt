@@ -1,5 +1,6 @@
 "use client";
 
+import { Card, Chip } from "@heroui/react";
 import { calculateCommitWeightage } from "@volt/math";
 import type { ReviewStageFilter } from "@volt/types";
 import { CheckCircle2, ShieldCheck, Users } from "lucide-react";
@@ -60,9 +61,9 @@ export default function PeerReviewsPage() {
             </div>
             {pendingCoAuthorCommits.length === 0 ? (
               filter === "handshakes" && (
-                <div className="apple-surface rounded-[20px] p-6 text-[13px] text-ink-tertiary text-center">
+                <Card className="apple-surface rounded-[20px] p-6 text-[13px] text-ink-tertiary text-center">
                   Zero pending co-author handshakes awaiting verification.
-                </div>
+                </Card>
               )
             ) : (
               pendingCoAuthorCommits.map((c) => (
@@ -86,9 +87,9 @@ export default function PeerReviewsPage() {
             </div>
             {pendingPeerCommits.length === 0 ? (
               filter === "peer_reviews" && (
-                <div className="apple-surface rounded-[20px] p-6 text-[13px] text-ink-tertiary text-center">
+                <Card className="apple-surface rounded-[20px] p-6 text-[13px] text-ink-tertiary text-center">
                   All high-stakes deliverables have been finalized and recorded into score_audits.
-                </div>
+                </Card>
               )
             ) : (
               pendingPeerCommits.map((c) => (
@@ -117,12 +118,16 @@ export default function PeerReviewsPage() {
               <h2>Immutable Audit Ledger History</h2>
             </div>
             {auditedCommits.map((c) => (
-              <div key={c.id} className="apple-surface rounded-[20px] p-5 sm:p-6 flex items-center justify-between gap-4">
+              <Card key={c.id} className="apple-surface rounded-[20px] p-5 sm:p-6 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 text-[11px] font-mono text-ink-secondary mb-1">
-                    <span>[{c.shortHash}]</span>
+                    <Chip size="sm" variant="secondary">
+                      <Chip.Label>[{c.shortHash}]</Chip.Label>
+                    </Chip>
                     <span>by @{c.authorHandle}</span>
-                    <span className="text-accent-emerald font-semibold uppercase">{c.status}</span>
+                    <Chip color="success" size="sm" variant="soft" className="uppercase font-semibold">
+                      <Chip.Label>{c.status}</Chip.Label>
+                    </Chip>
                   </div>
                   <p className="text-[14px] font-medium text-ink-primary">{c.summary}</p>
                 </div>
@@ -132,7 +137,7 @@ export default function PeerReviewsPage() {
                   </span>
                   <span className="ml-1 text-[11px] text-ink-tertiary">pts</span>
                 </div>
-              </div>
+              </Card>
             ))}
           </section>
         )}

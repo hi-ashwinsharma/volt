@@ -1,9 +1,8 @@
 "use client";
 
-import { computeComplexityPower } from "@volt/math";
-import type { CommitCardProps, MathEquationPillProps } from "@volt/types";
+import { Card, Chip } from "@heroui/react";
+import type { CommitCardProps } from "@volt/types";
 import {
-  ChevronDown,
   FileCode2,
   FlaskConical,
   GitCommitHorizontal,
@@ -12,35 +11,9 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { MathEquationPill } from "./MathEquationPill";
 
-export function MathEquationPill(props: MathEquationPillProps) {
-  const cPower = computeComplexityPower(props.complexity);
-
-  return (
-    <button
-      type="button"
-      onClick={props.onToggleExpand}
-      className="apple-pill group flex flex-wrap items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[11px] tabular-nums active:scale-[0.98]"
-      aria-expanded={props.isExpanded}
-    >
-      <span className="text-ink-secondary">C:{props.complexity} ({cPower})</span>
-      <span className="text-ink-tertiary">×</span>
-      <span className="text-ink-secondary">I:{props.impact.toFixed(1)}×</span>
-      <span className="text-ink-tertiary">×</span>
-      <span className="text-ink-secondary">E:{props.evidence.toFixed(1)}×</span>
-      <span className="text-ink-tertiary">×</span>
-      <span className="text-ink-secondary">V:{props.consensus.toFixed(2)}</span>
-      <span className="text-ink-tertiary">×</span>
-      <span className="text-ink-secondary">D:{props.decay.toFixed(2)}</span>
-      <ChevronDown
-        className={`ml-1 h-3 w-3 text-ink-tertiary transition-transform duration-200 ease-apple group-hover:text-ink-primary ${
-          props.isExpanded ? "rotate-180" : ""
-        }`}
-        aria-hidden="true"
-      />
-    </button>
-  );
-}
+export { MathEquationPill };
 
 export function CommitCard(props: CommitCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -49,46 +22,46 @@ export function CommitCard(props: CommitCardProps) {
 
   const statusMeta =
     commit.status === "approved"
-      ? { dotClass: "bg-status-ok", label: "Verified & Scored", textClass: "text-accent-emerald" }
+      ? { color: "success" as const, label: "Verified & Scored" }
       : commit.status === "pending_peer"
-        ? { dotClass: "bg-status-warn", label: "Peer Review Required (>15 pts)", textClass: "text-accent-amber" }
-        : { dotClass: "bg-status-warn", label: "Co-Author Handshake", textClass: "text-accent-amber" };
+        ? { color: "warning" as const, label: "Peer Review Required (>15 pts)" }
+        : { color: "warning" as const, label: "Co-Author Handshake" };
 
   return (
-    <article className="apple-surface rounded-[20px] p-5 sm:p-6 relative">
+    <Card className="apple-surface rounded-[20px] p-5 sm:p-6 relative">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
         <div className="min-w-0 flex-1 space-y-2">
           {/* Metadata Row */}
           <div className="flex flex-wrap items-center gap-2 text-[11px]">
-            <span className="rounded-md border border-border-subtle bg-control px-2 py-0.5 font-mono text-ink-secondary">
-              {commit.shortHash}
-            </span>
+            <Chip size="sm" variant="secondary" className="font-mono text-ink-secondary">
+              <Chip.Label>{commit.shortHash}</Chip.Label>
+            </Chip>
 
             {commit.type === "output" ? (
-              <span className="flex items-center gap-1 rounded-md px-2 py-0.5 font-medium bg-accent-emerald-bg text-accent-emerald">
+              <Chip color="success" size="sm" variant="soft" className="font-medium">
                 <GitCommitHorizontal className="h-3 w-3" aria-hidden="true" />
-                <span>Output</span>
-              </span>
+                <Chip.Label>Output</Chip.Label>
+              </Chip>
             ) : (
-              <span className="flex items-center gap-1 rounded-md px-2 py-0.5 font-medium bg-accent-indigo-bg text-accent-indigo">
+              <Chip color="accent" size="sm" variant="soft" className="font-medium">
                 <FlaskConical className="h-3 w-3" aria-hidden="true" />
-                <span>Insight (R&D)</span>
-              </span>
+                <Chip.Label>Insight (R&D)</Chip.Label>
+              </Chip>
             )}
 
-            <span className="rounded-md bg-control px-2 py-0.5 capitalize text-ink-secondary font-medium">
-              {commit.domain}
-            </span>
+            <Chip size="sm" variant="secondary" className="capitalize text-ink-secondary font-medium">
+              <Chip.Label>{commit.domain}</Chip.Label>
+            </Chip>
 
             <span className="text-ink-tertiary">·</span>
 
             <span className="font-mono text-ink-secondary">@{commit.authorHandle}</span>
 
             {commit.coAuthors.length > 0 && (
-              <span className="flex items-center gap-1 rounded-md bg-control px-2 py-0.5 text-ink-secondary">
+              <Chip size="sm" variant="secondary" className="text-ink-secondary">
                 <Users className="h-3 w-3 opacity-70" aria-hidden="true" />
-                <span>{commit.coAuthors.map((c) => `@${c.handle}`).join(", ")}</span>
-              </span>
+                <Chip.Label>{commit.coAuthors.map((c) => `@${c.handle}`).join(", ")}</Chip.Label>
+              </Chip>
             )}
           </div>
 
@@ -111,9 +84,9 @@ export function CommitCard(props: CommitCardProps) {
                 onToggleExpand={() => setIsExpanded((p) => !p)}
               />
             ) : (
-              <span className="font-mono text-[11px] text-accent-amber bg-accent-amber-bg px-2.5 py-0.5 rounded-full">
-                AI Judge queued pending co-author handshake
-              </span>
+              <Chip color="warning" size="sm" variant="soft" className="font-mono text-[11px]">
+                <Chip.Label>AI Judge queued pending co-author handshake</Chip.Label>
+              </Chip>
             )}
 
             {commit.artifactType === "github_app" && (
@@ -139,10 +112,9 @@ export function CommitCard(props: CommitCardProps) {
 
         {/* Score Readout on the Right */}
         <div className="flex flex-row items-center justify-between border-t border-border-subtle pt-3 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0">
-          <div className="flex items-center gap-1.5 rounded-full border border-border-subtle bg-control px-2.5 py-0.5 text-[11px] font-medium text-ink-secondary">
-            <span className={`h-1.5 w-1.5 rounded-full ${statusMeta.dotClass}`} />
-            <span className={statusMeta.textClass}>{statusMeta.label}</span>
-          </div>
+          <Chip color={statusMeta.color} size="sm" variant="secondary" className="font-medium">
+            <Chip.Label>{statusMeta.label}</Chip.Label>
+          </Chip>
 
           <div className="mt-0 text-right sm:mt-2.5">
             <span className="font-mono text-[26px] font-semibold tracking-[-0.035em] tabular-nums text-ink-primary">
@@ -186,6 +158,6 @@ export function CommitCard(props: CommitCardProps) {
           )}
         </div>
       )}
-    </article>
+    </Card>
   );
 }

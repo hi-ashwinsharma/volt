@@ -1,5 +1,6 @@
 "use client";
 
+import { Card, Chip } from "@heroui/react";
 import { calculateCommitWeightage } from "@volt/math";
 import { canReviewCommit } from "@volt/policy";
 import type {
@@ -52,20 +53,20 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
   };
 
   return (
-    <article className="apple-surface rounded-[24px] p-6 space-y-5">
+    <Card className="apple-surface rounded-[24px] p-6 space-y-5">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left 7 Columns: Context & Evidence */}
         <div className="lg:col-span-7 space-y-3.5">
           <div className="flex flex-wrap items-center gap-2 text-[11px]">
-            <span className="font-mono font-medium rounded-md bg-control px-2 py-0.5 text-ink-secondary">
-              {commit.shortHash}
-            </span>
-            <span className="rounded-md px-2 py-0.5 font-medium bg-accent-amber-bg text-accent-amber">
-              High-Stakes Score (&gt;15.00 pts threshold)
-            </span>
-            <span className="rounded-md bg-control px-2 py-0.5 capitalize text-ink-secondary font-medium">
-              {commit.domain}
-            </span>
+            <Chip size="sm" variant="secondary" className="font-mono font-medium">
+              <Chip.Label>{commit.shortHash}</Chip.Label>
+            </Chip>
+            <Chip color="warning" size="sm" variant="soft" className="font-medium">
+              <Chip.Label>High-Stakes Score (&gt;15.00 pts threshold)</Chip.Label>
+            </Chip>
+            <Chip size="sm" variant="secondary" className="capitalize font-medium">
+              <Chip.Label>{commit.domain}</Chip.Label>
+            </Chip>
             <span className="text-ink-tertiary">·</span>
             <span className="font-mono text-ink-secondary">by @{commit.authorHandle}</span>
           </div>
@@ -121,7 +122,7 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
           onSwitchPersona={props.onSwitchPersona}
         />
       </div>
-    </article>
+    </Card>
   );
 }
 export { CoAuthorHandshakeCard } from "./CoAuthorHandshakeCard";

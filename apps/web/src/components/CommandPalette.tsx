@@ -1,5 +1,6 @@
 "use client";
 
+import { Button, Card, Kbd } from "@heroui/react";
 import { AppRoutes, type CommandPaletteProps } from "@volt/types";
 import {
   Activity,
@@ -83,7 +84,7 @@ export function CommandPalette(props: CommandPaletteProps) {
       aria-label="Volt Command Palette"
       onClick={props.onClose}
     >
-      <div
+      <Card
         className="apple-composer w-full max-w-xl overflow-hidden rounded-[20px] p-2"
         onClick={(e) => e.stopPropagation()}
       >
@@ -98,17 +99,19 @@ export function CommandPalette(props: CommandPaletteProps) {
             placeholder="Type a command or micro-log to stage immediately..."
             className="w-full bg-transparent text-[14px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
           />
-          <button
-            type="button"
+          <Button
+            size="sm"
+            variant="ghost"
+            isIconOnly
             onClick={props.onClose}
-            className="apple-pill rounded-full p-1"
+            className="apple-pill rounded-full p-1 h-6 w-6"
             aria-label="Close Command Palette"
           >
             <X className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
 
-        <div className="mt-1.5 space-y-1 p-1">
+        <Card.Content className="mt-1.5 space-y-1 p-1">
           {query.trim().length > 0 && (
             <button
               type="button"
@@ -140,9 +143,9 @@ export function CommandPalette(props: CommandPaletteProps) {
                   <Icon className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
                   <span>{item.label}</span>
                 </span>
-                <kbd className="rounded-[6px] bg-control px-2 py-0.5 font-mono text-[10px] text-ink-tertiary">
-                  {item.shortcut}
-                </kbd>
+                <Kbd className="text-[10px]">
+                  <Kbd.Content>{item.shortcut}</Kbd.Content>
+                </Kbd>
               </button>
             );
           })}
@@ -166,13 +169,13 @@ export function CommandPalette(props: CommandPaletteProps) {
                   Switch to {props.theme === "dark" ? "Light" : "Dark"} Appearance
                 </span>
               </span>
-              <kbd className="rounded-[6px] bg-control px-2 py-0.5 font-mono text-[10px] text-ink-tertiary">
-                Theme
-              </kbd>
+              <Kbd className="text-[10px]">
+                <Kbd.Content>Theme</Kbd.Content>
+              </Kbd>
             </button>
           )}
-        </div>
-      </div>
+        </Card.Content>
+      </Card>
     </div>
   );
 }

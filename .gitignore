@@ -44,3 +44,7 @@ yarn-error.log*
 .idea/
 .vscode/
 coverage/
+.neon
+*.bun-build
+# heroui-agents-md
+.heroui-docs/

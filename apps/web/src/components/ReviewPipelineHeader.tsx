@@ -1,5 +1,6 @@
 "use client";
 
+import { Chip } from "@heroui/react";
 import type { ReviewPipelineHeaderProps } from "@volt/types";
 import { CheckCircle2, Clock, ShieldCheck } from "lucide-react";
 
@@ -33,9 +34,9 @@ export function ReviewPipelineHeader(props: ReviewPipelineHeaderProps) {
             }`}
           >
             <span>Actionable</span>
-            <span className="font-mono text-[10px] bg-accent-amber-bg text-accent-amber px-2 py-0.5 rounded-full">
-              {pendingCoAuthorCount + pendingPeerCount}
-            </span>
+            <Chip color="warning" size="sm" variant="soft" className="h-4 px-1.5 font-mono text-[10px]">
+              <Chip.Label>{pendingCoAuthorCount + pendingPeerCount}</Chip.Label>
+            </Chip>
           </button>
 
           <button

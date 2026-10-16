@@ -1,5 +1,6 @@
 "use client";
 
+import { Button, Card, Chip, Input } from "@heroui/react";
 import {
   COMPLEXITY_SCORES,
   IMPACT_MULTIPLIERS,
@@ -30,7 +31,7 @@ export function ReviewWorkbenchCalibration(props: ReviewWorkbenchCalibrationProp
   } = props;
 
   return (
-    <div className="lg:col-span-5 apple-inset rounded-[18px] p-5 sm:p-6 space-y-4">
+    <Card className="lg:col-span-5 apple-inset rounded-[18px] p-5 sm:p-6 space-y-4">
       <div className="flex items-baseline justify-between border-b border-border-subtle pb-3">
         <div>
           <span className="text-[11px] font-medium text-ink-tertiary uppercase tracking-wider">
@@ -42,9 +43,9 @@ export function ReviewWorkbenchCalibration(props: ReviewWorkbenchCalibrationProp
           </div>
         </div>
         {audit && (
-          <span className="font-mono text-[10px] text-ink-secondary bg-control px-2 py-0.5 rounded-full">
-            Baseline: {audit.finalPoints.toFixed(2)} pts
-          </span>
+          <Chip size="sm" variant="secondary" className="font-mono text-[10px]">
+            <Chip.Label>Baseline: {audit.finalPoints.toFixed(2)} pts</Chip.Label>
+          </Chip>
         )}
       </div>
 
@@ -58,14 +59,15 @@ export function ReviewWorkbenchCalibration(props: ReviewWorkbenchCalibrationProp
             </p>
           </div>
           {onSwitchPersona && (
-            <button
-              type="button"
+            <Button
+              size="sm"
+              variant="ghost"
               onClick={() => onSwitchPersona("priya")}
               className="apple-pill w-full flex items-center justify-center gap-2 rounded-full py-2 text-[11px] font-medium text-ink-primary"
             >
               <UserCheck className="h-3.5 w-3.5 text-accent-blue" aria-hidden="true" />
               <span>Switch to Independent Reviewer (@priya)</span>
-            </button>
+            </Button>
           )}
         </div>
       ) : (
@@ -132,8 +134,9 @@ export function ReviewWorkbenchCalibration(props: ReviewWorkbenchCalibrationProp
             />
           </div>
 
-          <input
-            type="text"
+          <Input
+            aria-label="Audit reasoning"
+            fullWidth
             value={reasoning}
             onChange={(e) => onChangeReasoning(e.target.value)}
             placeholder="Audit reasoning for immutable score_audits ledger..."
@@ -141,27 +144,29 @@ export function ReviewWorkbenchCalibration(props: ReviewWorkbenchCalibrationProp
           />
 
           <div className="flex items-center gap-2 pt-1">
-            <button
-              type="button"
-              disabled={reasoning.trim().length < 5}
+            <Button
+              size="sm"
+              variant="primary"
+              isDisabled={reasoning.trim().length < 5}
               onClick={() => onSubmitDecision("approve")}
-              className="apple-btn-primary flex-1 flex items-center justify-center gap-1.5 rounded-full py-2 text-[11px] font-semibold disabled:opacity-35"
+              className="apple-btn-primary flex-1 flex items-center justify-center gap-1.5 rounded-full py-2 text-[11px] font-semibold"
             >
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Approve Score</span>
-            </button>
-            <button
-              type="button"
-              disabled={reasoning.trim().length < 5}
+            </Button>
+            <Button
+              size="sm"
+              variant="danger-soft"
+              isDisabled={reasoning.trim().length < 5}
               onClick={() => onSubmitDecision("reject")}
-              className="apple-pill flex items-center justify-center gap-1 rounded-full px-3 py-2 text-[11px] font-medium text-status-danger disabled:opacity-35"
+              className="flex items-center justify-center gap-1 rounded-full px-3 py-2 text-[11px] font-medium"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Reject</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

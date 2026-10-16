@@ -11,13 +11,16 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter=@volt/api --filter=@volt/web",
+    "dev:api": "bun --env-file=.env --filter @volt/api dev",
+    "dev:web": "bun --filter @volt/web dev",
+    "dev:all": "turbo run dev",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
     "test": "bun test",
-    "db:generate": "bun --filter @volt/db db:generate",
-    "db:migrate": "bun --filter @volt/db db:migrate",
-    "db:seed": "bun --filter @volt/db db:seed",
+    "db:generate": "bun --env-file=.env --filter @volt/db db:generate",
+    "db:migrate": "bun --env-file=.env --filter @volt/db db:migrate",
+    "db:seed": "bun --env-file=.env --filter @volt/db db:seed",
     "infra:setup": "bun --filter @volt/cli infra:setup",
     "quality:gate": "bun run scripts/quality-gate.ts"
   },
@@ -29,5 +32,9 @@
   "engines": {
     "bun": ">=1.2.0",
     "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@neon/config": "^1.9.2",
+    "@neon/env": "^1.6.3"
   }
 }

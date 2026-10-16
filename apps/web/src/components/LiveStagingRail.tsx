@@ -1,5 +1,6 @@
 "use client";
 
+import { Button, Card, Chip, Input } from "@heroui/react";
 import type { LiveStagingRailProps } from "@volt/types";
 import { Plus, Terminal, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -17,7 +18,7 @@ export function LiveStagingRail(props: LiveStagingRailProps) {
   return (
     <aside aria-label="Live Staging Buffer and Conceptual Model" className="space-y-4">
       {/* Live Staging Buffer Card */}
-      <div className="apple-surface rounded-[20px] p-5 sm:p-6">
+      <Card className="apple-surface rounded-[20px] p-5 sm:p-6">
         <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-status-ok animate-pulse" />
@@ -25,9 +26,9 @@ export function LiveStagingRail(props: LiveStagingRailProps) {
               Live Staging Buffer
             </h3>
           </div>
-          <span className="font-mono text-[11px] tabular-nums text-ink-secondary bg-control px-2 py-0.5 rounded-full">
-            {props.stagedLogs.length} uncommitted
-          </span>
+          <Chip size="sm" variant="secondary" className="font-mono text-[11px] tabular-nums">
+            <Chip.Label>{props.stagedLogs.length} uncommitted</Chip.Label>
+          </Chip>
         </div>
 
         <p className="mt-2.5 text-[11px] leading-relaxed text-ink-tertiary">
@@ -36,21 +37,25 @@ export function LiveStagingRail(props: LiveStagingRailProps) {
 
         {/* Quick inline stage affordance */}
         <form onSubmit={handleQuickAdd} className="mt-3 flex items-center gap-1.5">
-          <input
-            type="text"
+          <Input
+            aria-label="Quick add micro-log"
+            fullWidth
             value={quickText}
             onChange={(e) => setQuickText(e.target.value)}
             placeholder="Quick add micro-log..."
             className="apple-inset flex-1 rounded-full px-3 py-1.5 text-[11px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
           />
-          <button
+          <Button
             type="submit"
-            disabled={!quickText.trim()}
-            className="apple-pill flex h-7 w-7 items-center justify-center rounded-full text-ink-primary disabled:opacity-30"
-            title="Stage log immediately"
+            size="sm"
+            variant="ghost"
+            isIconOnly
+            isDisabled={!quickText.trim()}
+            className="apple-pill flex h-7 w-7 items-center justify-center rounded-full text-ink-primary"
+            aria-label="Stage log immediately"
           >
             <Plus className="h-3 w-3" aria-hidden="true" />
-          </button>
+          </Button>
         </form>
 
         {/* Micro-logs list */}
@@ -83,10 +88,10 @@ export function LiveStagingRail(props: LiveStagingRailProps) {
             ))
           )}
         </div>
-      </div>
+      </Card>
 
       {/* Don Norman Conceptual Model: The Math Engine at a glance */}
-      <div className="apple-surface rounded-[20px] p-5 text-[11px]">
+      <Card className="apple-surface rounded-[20px] p-5 text-[11px]">
         <div className="flex items-center gap-1.5 font-semibold text-ink-primary mb-2">
           <Terminal className="h-3.5 w-3.5 text-accent-emerald" aria-hidden="true" />
           <span>Weightage Formula Model</span>
@@ -98,28 +103,13 @@ export function LiveStagingRail(props: LiveStagingRailProps) {
           W_c = (C<sup>1.4</sup> × I × E) × V × D
         </div>
         <ul className="mt-2.5 space-y-1 text-ink-tertiary">
-          <li className="flex justify-between">
-            <span>Complexity (C):</span>
-            <span className="font-mono text-ink-secondary">1 to 13 (C^1.4)</span>
-          </li>
-          <li className="flex justify-between">
-            <span>Impact (I):</span>
-            <span className="font-mono text-ink-secondary">0.5× to 3.0×</span>
-          </li>
-          <li className="flex justify-between">
-            <span>Proof (E):</span>
-            <span className="font-mono text-ink-secondary">0.5× to 1.2×</span>
-          </li>
-          <li className="flex justify-between">
-            <span>Auto-Approve:</span>
-            <span className="font-mono text-accent-emerald font-medium">≤ 15.00 pts</span>
-          </li>
-          <li className="flex justify-between">
-            <span>Peer Review:</span>
-            <span className="font-mono text-accent-amber font-medium">&gt; 15.00 pts</span>
-          </li>
+          <li>• <strong className="text-ink-primary">C (Complexity):</strong> Fibonacci [1..21] raised to 1.4x exponent.</li>
+          <li>• <strong className="text-ink-primary">I (Impact):</strong> Business leverage [0.8x..2.0x].</li>
+          <li>• <strong className="text-ink-primary">E (Evidence):</strong> Automated GitHub PR [1.2x] or .ipynb [1.1x].</li>
+          <li>• <strong className="text-ink-primary">V (Consensus):</strong> Peer calibration [0.70x..1.30x].</li>
+          <li>• <strong className="text-ink-primary">D (Decay):</strong> Half-life timeliness discount [0.20x..1.00x].</li>
         </ul>
-      </div>
+      </Card>
     </aside>
   );
 }
