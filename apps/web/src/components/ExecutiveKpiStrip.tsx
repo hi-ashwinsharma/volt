@@ -18,7 +18,7 @@ export function ExecutiveKpiStrip(props: ExecutiveKpiStripProps) {
       aria-label="Cycle Executive Telemetry"
       className="grid grid-cols-2 gap-3 sm:grid-cols-4"
     >
-      <div className="apple-surface rounded-[16px] px-4 py-3.5">
+      <div className="apple-surface rounded-[16px] p-4 sm:p-5">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-medium tracking-[-0.01em] text-ink-secondary">
             Team Weighted Output
@@ -38,7 +38,7 @@ export function ExecutiveKpiStrip(props: ExecutiveKpiStripProps) {
 
       <Link
         href={AppRoutes.poolMatrix}
-        className="apple-surface group rounded-[16px] px-4 py-3.5"
+        className="apple-surface group rounded-[16px] p-4 sm:p-5"
       >
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-medium tracking-[-0.01em] text-ink-secondary">
@@ -58,7 +58,7 @@ export function ExecutiveKpiStrip(props: ExecutiveKpiStripProps) {
         </p>
       </Link>
 
-      <div className="apple-surface rounded-[16px] px-4 py-3.5">
+      <div className="apple-surface rounded-[16px] p-4 sm:p-5">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-medium tracking-[-0.01em] text-ink-secondary">
             Staged Buffer
@@ -78,7 +78,7 @@ export function ExecutiveKpiStrip(props: ExecutiveKpiStripProps) {
 
       <Link
         href={AppRoutes.peerReviews}
-        className="apple-surface group rounded-[16px] px-4 py-3.5"
+        className="apple-surface group rounded-[16px] p-4 sm:p-5"
       >
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-medium tracking-[-0.01em] text-ink-secondary">

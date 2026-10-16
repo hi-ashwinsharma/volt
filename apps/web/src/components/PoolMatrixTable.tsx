@@ -10,7 +10,7 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
     <section className="space-y-6">
       {/* 3-Column Bento Metric Tiles */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="apple-surface rounded-[20px] p-5.5">
+        <div className="apple-surface rounded-[20px] p-5 sm:p-6">
           <div className="flex items-center justify-between text-[12px] text-ink-secondary">
             <span>Active Sprint Cycle</span>
             <Scale className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
@@ -23,7 +23,7 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
           </p>
         </div>
 
-        <div className="apple-surface rounded-[20px] p-5.5">
+        <div className="apple-surface rounded-[20px] p-5 sm:p-6">
           <div className="flex items-center justify-between text-[12px] text-ink-secondary">
             <span>Total Team Weighted Output</span>
             <TrendingUp className="h-4 w-4 text-accent-emerald" aria-hidden="true" />
@@ -39,7 +39,7 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
           </p>
         </div>
 
-        <div className="apple-surface rounded-[20px] p-5.5">
+        <div className="apple-surface rounded-[20px] p-5 sm:p-6">
           <div className="flex items-center justify-between text-[12px] text-ink-secondary">
             <span>Bonus Pool Allocation</span>
             <Users className="h-4 w-4 text-accent-blue" aria-hidden="true" />
@@ -95,7 +95,7 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
 
       {/* Dynamic Bonus Pool Share Table */}
       <div className="apple-surface overflow-hidden rounded-[20px]">
-        <div className="border-b border-border-subtle px-6 py-4.5">
+        <div className="border-b border-border-subtle px-6 py-5">
           <h2 className="text-[15px] font-semibold tracking-[-0.018em] text-ink-primary">
             Dynamic Bonus Pool Share & Domain Leverage Matrix
           </h2>

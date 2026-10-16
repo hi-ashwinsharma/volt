@@ -52,7 +52,7 @@ export function TopCaptureBar(props: TopCaptureBarProps) {
   };
 
   return (
-    <section aria-label="Quick Capture and Deliverable Composer" className="apple-composer rounded-[20px] p-4">
+    <section aria-label="Quick Capture and Deliverable Composer" className="apple-composer rounded-[20px] p-5 sm:p-6">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center rounded-full border border-border-subtle bg-control p-0.5">
           <button

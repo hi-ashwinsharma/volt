@@ -117,7 +117,7 @@ export default function PeerReviewsPage() {
               <h2>Immutable Audit Ledger History</h2>
             </div>
             {auditedCommits.map((c) => (
-              <div key={c.id} className="apple-surface rounded-[20px] p-5 flex items-center justify-between gap-4">
+              <div key={c.id} className="apple-surface rounded-[20px] p-5 sm:p-6 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 text-[11px] font-mono text-ink-secondary mb-1">
                     <span>[{c.shortHash}]</span>

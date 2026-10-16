@@ -33,7 +33,7 @@ export function ReviewPipelineHeader(props: ReviewPipelineHeaderProps) {
             }`}
           >
             <span>Actionable</span>
-            <span className="font-mono text-[10px] bg-accent-amber-bg text-accent-amber px-1.5 py-0.2 rounded-full">
+            <span className="font-mono text-[10px] bg-accent-amber-bg text-accent-amber px-2 py-0.5 rounded-full">
               {pendingCoAuthorCount + pendingPeerCount}
             </span>
           </button>

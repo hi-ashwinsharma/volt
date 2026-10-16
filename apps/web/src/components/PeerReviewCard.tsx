@@ -75,7 +75,7 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
           </h3>
 
           {commit.artifactType === "github_app" && commit.githubPrUrl && (
-            <div className="apple-inset rounded-[14px] p-3 flex items-center justify-between gap-3 text-[12px]">
+            <div className="apple-inset rounded-[14px] p-3.5 flex items-center justify-between gap-3 text-[12px]">
               <div className="flex items-center gap-2">
                 <GitPullRequest className="h-4 w-4 text-accent-blue" aria-hidden="true" />
                 <span className="font-medium text-ink-primary">GitHub App Verified Pull Request</span>
@@ -87,14 +87,14 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
           )}
 
           {commit.artifactType === "file_upload" && (
-            <div className="apple-inset rounded-[14px] p-3 flex items-center gap-2 text-[12px]">
+            <div className="apple-inset rounded-[14px] p-3.5 flex items-center gap-2 text-[12px]">
               <FileCode2 className="h-4 w-4 text-accent-indigo" aria-hidden="true" />
               <span className="font-medium text-ink-primary">Verified .ipynb Empirical Benchmark Notebook</span>
             </div>
           )}
 
           {audit && (
-            <div className="apple-inset rounded-[14px] p-3.5 text-[12px] space-y-1">
+            <div className="apple-inset rounded-[14px] p-4 text-[12px] space-y-1.5">
               <div className="flex items-center gap-1.5 font-medium text-accent-emerald text-[11px]">
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Gemini 1.5 Flash AI Judge Recommendation</span>
