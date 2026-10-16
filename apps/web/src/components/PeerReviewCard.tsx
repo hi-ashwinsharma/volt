@@ -2,62 +2,19 @@
 
 import { calculateCommitWeightage } from "@volt/math";
 import { canReviewCommit } from "@volt/policy";
-import {
-  COMPLEXITY_SCORES,
-  EVIDENCE_MULTIPLIERS,
-  IMPACT_MULTIPLIERS,
-  type CoAuthorHandshakeCardProps,
-  type ComplexityScore,
-  type EvidenceMultiplier,
-  type ImpactMultiplier,
-  type PeerReviewCardProps,
+import type {
+  ComplexityScore,
+  EvidenceMultiplier,
+  ImpactMultiplier,
+  PeerReviewCardProps,
 } from "@volt/types";
-import { Check, ShieldCheck, X } from "lucide-react";
+import {
+  FileCode2,
+  GitPullRequest,
+  Sparkles,
+} from "lucide-react";
 import { useState } from "react";
-
-export function CoAuthorHandshakeCard(props: CoAuthorHandshakeCardProps) {
-  const [note, setNote] = useState("");
-  const { commit } = props;
-
-  return (
-    <div className="apple-surface rounded-[20px] p-5">
-      <div className="flex items-center justify-between text-[12px]">
-        <div className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-status-warn" />
-          <span className="font-mono text-ink-secondary">[{commit.shortHash}]</span>
-          <span className="font-medium text-ink-primary">Co-Author Handshake from @{commit.authorHandle}</span>
-        </div>
-        <span className="font-mono text-[11px] text-ink-tertiary">24h window</span>
-      </div>
-      <p className="mt-2.5 text-[14px] font-medium leading-relaxed text-ink-primary">{commit.summary}</p>
-      <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-        <input
-          type="text"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder="Describe your 1-line contribution to unlock AI Judge grading..."
-          className="apple-inset flex-1 rounded-full px-4 py-2 text-[12px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
-        />
-        <button
-          type="button"
-          onClick={() => props.onVerifyHandshake(commit.shortHash, "verify", note)}
-          className="apple-btn-primary flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-medium"
-        >
-          <Check className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>Verify & Unlock</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => props.onVerifyHandshake(commit.shortHash, "reject")}
-          className="apple-pill flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-[12px] font-medium text-status-danger"
-        >
-          <X className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>Reject</span>
-        </button>
-      </div>
-    </div>
-  );
-}
+import { ReviewWorkbenchCalibration } from "./ReviewWorkbenchCalibration";
 
 export function PeerReviewCard(props: PeerReviewCardProps) {
   const { commit, currentUser } = props;
@@ -66,7 +23,7 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
   const [vConsensus, setVConsensus] = useState<number>(audit?.vConsensus ?? 1.0);
   const [overrideC, setOverrideC] = useState<ComplexityScore>(audit?.cComplexity ?? 8);
   const [overrideI, setOverrideI] = useState<ImpactMultiplier>(audit?.iImpact ?? 1.5);
-  const [overrideE, setOverrideE] = useState<EvidenceMultiplier>(audit?.eEvidence ?? 1.0);
+  const overrideE: EvidenceMultiplier = audit?.eEvidence ?? 1.0;
   const [reasoning, setReasoning] = useState("");
 
   const guard = canReviewCommit(currentUser, {
@@ -95,94 +52,76 @@ export function PeerReviewCard(props: PeerReviewCardProps) {
   };
 
   return (
-    <div className="apple-surface rounded-[20px] p-5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2 text-[12px]">
-          <span className="h-1.5 w-1.5 rounded-full bg-status-warn" />
-          <span className="rounded-[6px] border border-border-subtle bg-control px-2 py-0.5 font-mono text-[11px] text-ink-secondary">{commit.shortHash}</span>
-          <span className="text-ink-secondary">
-            by <strong className="font-mono text-ink-primary">@{commit.authorHandle}</strong> · <span className="capitalize">{commit.domain}</span>
-          </span>
+    <article className="apple-surface rounded-[24px] p-6 space-y-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left 7 Columns: Context & Evidence */}
+        <div className="lg:col-span-7 space-y-3.5">
+          <div className="flex flex-wrap items-center gap-2 text-[11px]">
+            <span className="font-mono font-medium rounded-md bg-control px-2 py-0.5 text-ink-secondary">
+              {commit.shortHash}
+            </span>
+            <span className="rounded-md px-2 py-0.5 font-medium bg-accent-amber-bg text-accent-amber">
+              High-Stakes Score (&gt;15.00 pts threshold)
+            </span>
+            <span className="rounded-md bg-control px-2 py-0.5 capitalize text-ink-secondary font-medium">
+              {commit.domain}
+            </span>
+            <span className="text-ink-tertiary">·</span>
+            <span className="font-mono text-ink-secondary">by @{commit.authorHandle}</span>
+          </div>
+
+          <h3 className="text-[17px] font-semibold tracking-[-0.018em] text-ink-primary leading-snug">
+            {commit.summary}
+          </h3>
+
+          {commit.artifactType === "github_app" && commit.githubPrUrl && (
+            <div className="apple-inset rounded-[14px] p-3 flex items-center justify-between gap-3 text-[12px]">
+              <div className="flex items-center gap-2">
+                <GitPullRequest className="h-4 w-4 text-accent-blue" aria-hidden="true" />
+                <span className="font-medium text-ink-primary">GitHub App Verified Pull Request</span>
+              </div>
+              <a href={commit.githubPrUrl} target="_blank" rel="noreferrer" className="text-[11px] font-mono text-accent-blue hover:underline">
+                View Pull Request →
+              </a>
+            </div>
+          )}
+
+          {commit.artifactType === "file_upload" && (
+            <div className="apple-inset rounded-[14px] p-3 flex items-center gap-2 text-[12px]">
+              <FileCode2 className="h-4 w-4 text-accent-indigo" aria-hidden="true" />
+              <span className="font-medium text-ink-primary">Verified .ipynb Empirical Benchmark Notebook</span>
+            </div>
+          )}
+
+          {audit && (
+            <div className="apple-inset rounded-[14px] p-3.5 text-[12px] space-y-1">
+              <div className="flex items-center gap-1.5 font-medium text-accent-emerald text-[11px]">
+                <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Gemini 1.5 Flash AI Judge Recommendation</span>
+              </div>
+              <p className="text-ink-secondary leading-relaxed">{audit.reasoning}</p>
+            </div>
+          )}
         </div>
-        <div className="text-right">
-          <span className="text-[11px] text-ink-tertiary">Live Preview </span>
-          <span className="font-mono text-[20px] font-semibold tracking-[-0.03em] tabular-nums text-ink-primary">{livePreview.finalPoints.toFixed(2)}</span>
-          <span className="ml-1 text-[11px] text-ink-tertiary">pts</span>
-        </div>
+
+        {/* Right 5 Columns: Interactive Workbench */}
+        <ReviewWorkbenchCalibration
+          audit={audit}
+          canReview={guard.allowed}
+          livePoints={livePreview.finalPoints}
+          overrideC={overrideC}
+          onSelectComplexity={setOverrideC}
+          overrideI={overrideI}
+          onSelectImpact={setOverrideI}
+          vConsensus={vConsensus}
+          onChangeConsensus={setVConsensus}
+          reasoning={reasoning}
+          onChangeReasoning={setReasoning}
+          onSubmitDecision={submitDecision}
+          onSwitchPersona={props.onSwitchPersona}
+        />
       </div>
-
-      <p className="mt-2.5 text-[15px] font-medium leading-relaxed text-ink-primary">{commit.summary}</p>
-      {audit && <p className="mt-1 text-[12px] text-ink-secondary">AI Judge Rationale: {audit.reasoning}</p>}
-
-      {!guard.allowed ? (
-        <div className="apple-inset mt-4 flex items-center gap-2.5 rounded-[14px] px-4 py-3 text-[12px] text-ink-secondary">
-          <span className="h-2 w-2 shrink-0 rounded-full bg-status-warn" />
-          <span>Conflict-of-Interest Guard ({guard.reason}): Primary authors and co-authors cannot self-review their own high-stakes commits.</span>
-        </div>
-      ) : (
-        <div className="mt-4 space-y-4 border-t border-border-subtle pt-4">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-            <div className="apple-inset rounded-[12px] p-3">
-              <div className="flex justify-between text-[11px]">
-                <span className="text-ink-secondary">Consensus (V)</span>
-                <span className="font-mono font-semibold tabular-nums text-ink-primary">{vConsensus.toFixed(2)}×</span>
-              </div>
-              <input type="range" min="0.70" max="1.30" step="0.05" value={vConsensus} onChange={(e) => setVConsensus(Number(e.target.value))} className="mt-2.5 w-full" />
-            </div>
-
-            <div className="apple-inset rounded-[12px] p-3">
-              <span className="block text-[11px] text-ink-secondary">Complexity (C)</span>
-              <div className="mt-2 flex flex-wrap gap-1">
-                {COMPLEXITY_SCORES.map((c) => (
-                  <button key={c} type="button" onClick={() => setOverrideC(c)} className={`rounded-[6px] px-2 py-0.5 font-mono text-[11px] transition-all ${overrideC === c ? "bg-segmented-active font-semibold text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"}`}>
-                    {c}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="apple-inset rounded-[12px] p-3">
-              <span className="block text-[11px] text-ink-secondary">Impact (I)</span>
-              <div className="mt-2 flex flex-wrap gap-1">
-                {IMPACT_MULTIPLIERS.map((i) => (
-                  <button key={i} type="button" onClick={() => setOverrideI(i)} className={`rounded-[6px] px-2 py-0.5 font-mono text-[11px] transition-all ${overrideI === i ? "bg-segmented-active font-semibold text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"}`}>
-                    {i}×
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="apple-inset rounded-[12px] p-3">
-              <span className="block text-[11px] text-ink-secondary">Evidence (E)</span>
-              <div className="mt-2 flex flex-wrap gap-1">
-                {EVIDENCE_MULTIPLIERS.map((ev) => (
-                  <button key={ev} type="button" onClick={() => setOverrideE(ev)} className={`rounded-[6px] px-2 py-0.5 font-mono text-[11px] transition-all ${overrideE === ev ? "bg-segmented-active font-semibold text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"}`}>
-                    {ev}×
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <input
-              type="text"
-              value={reasoning}
-              onChange={(e) => setReasoning(e.target.value)}
-              placeholder="Mandatory audit note for append-only score_audits ledger..."
-              className="apple-inset flex-1 rounded-full px-4 py-2 text-[12px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
-            />
-            <button type="button" disabled={reasoning.trim().length < 5} onClick={() => submitDecision("approve")} className="apple-btn-primary flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-medium disabled:opacity-35">
-              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Approve Score</span>
-            </button>
-            <button type="button" disabled={reasoning.trim().length < 5} onClick={() => submitDecision("reject")} className="apple-pill flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-medium text-status-danger disabled:opacity-35">
-              <X className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Reject</span>
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    </article>
   );
 }
+export { CoAuthorHandshakeCard } from "./CoAuthorHandshakeCard";

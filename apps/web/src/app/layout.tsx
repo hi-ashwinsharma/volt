@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { VoltWorkspaceProvider } from "../context/VoltWorkspaceContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className="min-h-screen bg-canvas text-ink-primary antialiased">
-        {children}
+        <VoltWorkspaceProvider>{children}</VoltWorkspaceProvider>
       </body>
     </html>
   );

@@ -8,3 +8,4 @@ export * from "./routes.constants";
 export * from "./cli.types";
 export * from "./ui.types";
 export * from "./tauri.types";
+export * from "./workspace.types";
