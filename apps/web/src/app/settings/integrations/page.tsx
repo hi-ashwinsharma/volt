@@ -8,28 +8,20 @@ import {
   PolicyAdminConsole,
 } from "../../../components/IntegrationsAndPolicyCards";
 import { NavigationHeader } from "../../../components/NavigationHeader";
-import { useGovernanceAndPool } from "../../../hooks/useGovernanceAndPool";
-import { useVoltCommandCenter } from "../../../hooks/useVoltCommandCenter";
+import { useVoltWorkspace } from "../../../context/VoltWorkspaceContext";
 
 export default function SettingsIntegrationsPage() {
   const router = useRouter();
-  const state = useVoltCommandCenter();
-  const gov = useGovernanceAndPool({
-    currentUser: state.currentUser,
-    commits: state.commits,
-    setCommits: state.setCommits,
-    poolBudget: state.poolBudget,
-    apiKeys: state.apiKeys,
-    setApiKeys: state.setApiKeys,
-    setNewlyCreatedSecret: state.setNewlyCreatedSecret,
-  });
+  const state = useVoltWorkspace();
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas pb-20">
       <NavigationHeader
         userHandle={state.currentUser.handle}
+        availableHandles={state.availablePersonas.map((p) => p.handle)}
+        onSwitchPersona={state.switchPersona}
         pendingReviewsCount={
-          state.commits.filter((c) => c.status === "pending_peer").length
+          state.commits.filter((c) => c.status === "pending_peer" || c.status === "pending_coauthor").length
         }
         stagedLogsCount={state.stagedLogs.length}
         theme={state.theme}
@@ -37,26 +29,24 @@ export default function SettingsIntegrationsPage() {
         onOpenCommandPalette={() => state.setIsPaletteOpen(true)}
       />
 
-      <main className="mx-auto max-w-5xl space-y-6 px-6 py-8">
+      <main className="mx-auto max-w-[1360px] px-6 pt-8 space-y-6">
         <GitHubConnectCard
           installations={state.installations}
-          onConnectGitHub={gov.handleConnectGitHub}
+          onConnectGitHub={state.handleConnectGitHub}
           isLoading={state.isSubmitting}
         />
 
         <ApiKeysCard
           apiKeys={state.apiKeys}
           newlyCreatedSecret={state.newlyCreatedSecret}
-          onCreateKey={gov.handleCreateApiKey}
-          onRevokeKey={async (id) => {
-            state.setApiKeys((prev) => prev.filter((k) => k.id !== id));
-          }}
+          onCreateKey={state.handleCreateApiKey}
+          onRevokeKey={state.revokeApiKey}
         />
 
         <PolicyAdminConsole
-          groups={gov.policyDirectory.groups}
-          users={gov.policyDirectory.users}
-          onUpdateUserGroups={gov.handleUpdateUserGroups}
+          groups={state.policyDirectory.groups}
+          users={state.policyDirectory.users}
+          onUpdateUserGroups={state.handleUpdateUserGroups}
         />
       </main>
 

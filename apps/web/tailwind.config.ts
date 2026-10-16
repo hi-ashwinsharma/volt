@@ -19,6 +19,15 @@ const config: Config = {
         "status-ok": "var(--status-ok)",
         "status-warn": "var(--status-warn)",
         "status-danger": "var(--status-danger)",
+        "accent-emerald": "var(--accent-emerald)",
+        "accent-emerald-bg": "var(--accent-emerald-bg)",
+        "accent-indigo": "var(--accent-indigo)",
+        "accent-indigo-bg": "var(--accent-indigo-bg)",
+        "accent-blue": "var(--accent-blue)",
+        "accent-blue-bg": "var(--accent-blue-bg)",
+        "accent-amber": "var(--accent-amber)",
+        "accent-amber-bg": "var(--accent-amber-bg)",
+        "accent-danger-bg": "var(--accent-danger-bg)",
       },
       fontFamily: {
         sans: [

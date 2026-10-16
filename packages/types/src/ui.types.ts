@@ -1,5 +1,6 @@
 import type {
   CommitRecord,
+  ScoreAuditRecord,
   StagedLogRecord,
 } from "./commit.types";
 import type {
@@ -24,9 +25,12 @@ import type {
 
 export type CommandBarCaptureMode = "stage" | "commit";
 export type ThemeMode = "dark" | "light";
+export type ReviewStageFilter = "all_pending" | "handshakes" | "peer_reviews" | "audited";
 
 export interface NavigationHeaderProps {
   readonly userHandle: string;
+  readonly availableHandles?: readonly string[];
+  readonly onSwitchPersona?: (handle: string) => void;
   readonly pendingReviewsCount: number;
   readonly stagedLogsCount: number;
   readonly theme: ThemeMode;
@@ -53,6 +57,12 @@ export interface TopCaptureBarProps {
     readonly coAuthorHandles: readonly string[];
   }) => Promise<void>;
   readonly isSubmitting: boolean;
+}
+
+export interface LiveStagingRailProps {
+  readonly stagedLogs: readonly StagedLogRecord[];
+  readonly onStageLog: (rawText: string, githubPrUrl: string | null) => Promise<void>;
+  readonly onRemoveStagedLog: (id: string) => void;
 }
 
 export interface ImpactStreamFilterState {
@@ -82,6 +92,7 @@ export interface PeerReviewCardProps {
   readonly commit: CommitRecord;
   readonly currentUser: UserPolicyContext;
   readonly previewBreakdown: WeightageBreakdown;
+  readonly onSwitchPersona?: (handle: string) => void;
   readonly onSubmitReview: (
     shortHash: string,
     payload: {
@@ -108,6 +119,8 @@ export interface CoAuthorHandshakeCardProps {
 export interface PoolMatrixTableProps {
   readonly summary: CyclePoolShareSummary;
   readonly canManageCycles: boolean;
+  readonly poolBudget: number;
+  readonly onChangePoolBudget: (nextBudget: number) => void;
   readonly onExportCsv: () => void;
 }
 
@@ -149,4 +162,28 @@ export interface CommandPaletteProps {
   readonly onQuickStage: (text: string) => Promise<void>;
   readonly theme?: ThemeMode;
   readonly onToggleTheme?: () => void;
+}
+
+export interface ReviewPipelineHeaderProps {
+  readonly filter: ReviewStageFilter;
+  readonly onFilterChange: (stage: ReviewStageFilter) => void;
+  readonly pendingCoAuthorCount: number;
+  readonly pendingPeerCount: number;
+  readonly auditedCount: number;
+}
+
+export interface ReviewWorkbenchCalibrationProps {
+  readonly audit: ScoreAuditRecord | null;
+  readonly canReview: boolean;
+  readonly livePoints: number;
+  readonly overrideC: ComplexityScore;
+  readonly onSelectComplexity: (c: ComplexityScore) => void;
+  readonly overrideI: ImpactMultiplier;
+  readonly onSelectImpact: (i: ImpactMultiplier) => void;
+  readonly vConsensus: number;
+  readonly onChangeConsensus: (v: number) => void;
+  readonly reasoning: string;
+  readonly onChangeReasoning: (r: string) => void;
+  readonly onSubmitDecision: (decision: "approve" | "reject") => void;
+  readonly onSwitchPersona?: (handle: string) => void;
 }
