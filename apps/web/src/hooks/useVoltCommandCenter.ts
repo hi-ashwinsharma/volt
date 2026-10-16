@@ -6,6 +6,7 @@ import type {
   GitHubAppInstallationRecord,
   ImpactStreamFilterState,
   StagedLogRecord,
+  ThemeMode,
   UserApiKeyRecord,
   UserPolicyContext,
   WorkDomain,
@@ -25,6 +26,7 @@ import {
 } from "../services/seed-state";
 
 export function useVoltCommandCenter() {
+  const [theme, setTheme] = useState<ThemeMode>("dark");
   const [currentUser] = useState<UserPolicyContext>(INITIAL_USER_CONTEXT);
   const [stagedLogs, setStagedLogs] = useState<readonly StagedLogRecord[]>(INITIAL_STAGED_LOGS);
   const [commits, setCommits] = useState<readonly CommitRecord[]>(INITIAL_COMMITS_FEED);
@@ -44,13 +46,7 @@ export function useVoltCommandCenter() {
       accountLogin: "hi-ashwinsharma",
       accountType: "User",
       repositoriesSnapshot: [
-        {
-          id: 901,
-          name: "volt",
-          fullName: "hi-ashwinsharma/volt",
-          private: false,
-          htmlUrl: "https://github.com/hi-ashwinsharma/volt",
-        },
+        { id: 901, name: "volt", fullName: "hi-ashwinsharma/volt", private: false, htmlUrl: "https://github.com/hi-ashwinsharma/volt" },
       ],
       suspendedAt: null,
       createdAt: "2026-10-16T08:00:00.000Z",
@@ -71,11 +67,29 @@ export function useVoltCommandCenter() {
   const [newlyCreatedSecret, setNewlyCreatedSecret] = useState<string | null>(null);
 
   useEffect(() => {
+    const saved = window.localStorage.getItem("volt-theme");
+    const initial: ThemeMode =
+      saved === "light" || saved === "dark"
+        ? saved
+        : window.matchMedia("(prefers-color-scheme: light)").matches
+          ? "light"
+          : "dark";
+    setTheme(initial);
+    document.documentElement.setAttribute("data-theme", initial);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next: ThemeMode = prev === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      window.localStorage.setItem("volt-theme", next);
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
     void (async () => {
-      const [remoteStaged, remoteCommits] = await Promise.all([
-        fetchStagedLogs(),
-        fetchCommitFeed(),
-      ]);
+      const [remoteStaged, remoteCommits] = await Promise.all([fetchStagedLogs(), fetchCommitFeed()]);
       if (remoteStaged.length > 0) setStagedLogs(remoteStaged);
       if (remoteCommits.length > 0) setCommits(remoteCommits);
     })();
@@ -134,12 +148,7 @@ export function useVoltCommandCenter() {
       if (remote) {
         setCommits((prev) => [remote.commit, ...prev]);
       } else {
-        const newCommit = buildOptimisticCommitRecord({
-          currentUser,
-          stagedLogs,
-          ...payload,
-        });
-        setCommits((prev) => [newCommit, ...prev]);
+        setCommits((prev) => [buildOptimisticCommitRecord({ currentUser, stagedLogs, ...payload }), ...prev]);
       }
       setStagedLogs([]);
       setIsSubmitting(false);
@@ -163,6 +172,8 @@ export function useVoltCommandCenter() {
   }, [commits, filter]);
 
   return {
+    theme,
+    toggleTheme,
     currentUser,
     stagedLogs,
     commits,

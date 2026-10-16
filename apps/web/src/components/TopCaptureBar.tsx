@@ -8,6 +8,7 @@ import {
   type WorkDomain,
 } from "@volt/types";
 import {
+  ArrowUp,
   ChevronDown,
   FlaskConical,
   GitCommitHorizontal,
@@ -51,131 +52,141 @@ export function TopCaptureBar(props: TopCaptureBarProps) {
   };
 
   return (
-    <section aria-label="Quick Capture and Commit Bar" className="volt-glass rounded-2xl p-4 shadow-2xl transition">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 rounded-xl bg-black/40 p-1">
+    <section aria-label="Quick Capture and Deliverable Composer" className="apple-composer rounded-[20px] p-4">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center rounded-full border border-border-subtle bg-control p-0.5">
           <button
             type="button"
             onClick={() => setMode("stage")}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-              mode === "stage" ? "bg-zinc-800 text-zinc-50 shadow" : "text-zinc-400 hover:text-zinc-200"
+            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium transition-all duration-200 ease-apple active:scale-[0.98] ${
+              mode === "stage" ? "bg-segmented-active text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"
             }`}
           >
-            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Stage Micro-Log (volt add)</span>
+            <Plus className="h-3 w-3" aria-hidden="true" />
+            <span>Stage Micro-Log</span>
           </button>
           <button
             type="button"
             onClick={() => setMode("commit")}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-              mode === "commit" ? "bg-emerald-500/20 text-emerald-300 shadow" : "text-zinc-400 hover:text-zinc-200"
+            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium transition-all duration-200 ease-apple active:scale-[0.98] ${
+              mode === "commit" ? "bg-segmented-active text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"
             }`}
           >
             <GitCommitHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Commit Deliverable (volt commit)</span>
+            <span>Synthesize Commit</span>
           </button>
         </div>
 
         <button
           type="button"
           onClick={() => setShowDrawer((p) => !p)}
-          className="flex items-center gap-2 rounded-lg border border-white/[0.07] bg-zinc-900/70 px-3 py-1.5 text-xs text-zinc-300 transition hover:border-white/[0.14]"
+          className="apple-pill flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium active:scale-[0.98]"
         >
-          <Layers className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-          <span className="font-mono">{props.stagedLogs.length}</span>
-          <span>staged logs ready</span>
-          <ChevronDown className="h-3.5 w-3.5 text-zinc-400" aria-hidden="true" />
+          <Layers className="h-3 w-3 opacity-70" aria-hidden="true" />
+          <span className="font-mono font-semibold tabular-nums text-ink-primary">{props.stagedLogs.length}</span>
+          <span>staged in buffer</span>
+          <ChevronDown className={`h-3 w-3 transition-transform duration-200 ease-apple ${showDrawer ? "rotate-180" : ""}`} aria-hidden="true" />
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="apple-inset flex items-center gap-3 rounded-[14px] px-4 py-2.5">
           <input
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder={
               mode === "stage"
-                ? "Capture micro-task in <3 seconds (e.g., benchmarked quantization in Colab)..."
-                : "Synthesize deliverable or disproved research hypothesis..."
+                ? "Log micro-progress in under 3 seconds (e.g., profiled AWQ kernel latency)..."
+                : "Describe completed deliverable or disproved R&D hypothesis..."
             }
-            className="flex-1 rounded-xl border border-white/[0.08] bg-zinc-950/90 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-emerald-500/50 focus:outline-none"
+            className="flex-1 bg-transparent text-[14px] tracking-[-0.012em] text-ink-primary placeholder-ink-tertiary focus:outline-none"
           />
           <button
             type="submit"
-            disabled={props.isSubmitting}
-            className="flex items-center justify-center gap-2 rounded-xl bg-zinc-100 px-5 py-2.5 text-xs font-semibold text-zinc-950 transition hover:bg-white disabled:opacity-50"
+            disabled={props.isSubmitting || !inputText.trim()}
+            className="apple-btn-primary flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[12px] font-medium disabled:opacity-35"
           >
-            {mode === "stage" ? <Plus className="h-4 w-4" aria-hidden="true" /> : <GitCommitHorizontal className="h-4 w-4" aria-hidden="true" />}
-            <span>{mode === "stage" ? "Stage Log" : "Evaluate & Commit"}</span>
+            <span>{mode === "stage" ? "Stage" : "Commit"}</span>
+            <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 text-xs">
-          {mode === "commit" && (
-            <>
-              <div className="flex items-center gap-1 rounded-lg border border-white/[0.07] bg-zinc-900/70 p-1">
-                <button
-                  type="button"
-                  onClick={() => setCommitType("output")}
-                  className={`rounded px-2.5 py-1 font-medium ${commitType === "output" ? "bg-emerald-500/20 text-emerald-300" : "text-zinc-400"}`}
-                >
-                  OUTPUT
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCommitType("insight")}
-                  className={`flex items-center gap-1 rounded px-2.5 py-1 font-medium ${commitType === "insight" ? "bg-violet-500/20 text-violet-300" : "text-zinc-400"}`}
-                >
-                  <FlaskConical className="h-3 w-3" aria-hidden="true" />
-                  <span>INSIGHT (R&D)</span>
-                </button>
-              </div>
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5 text-[11px]">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {mode === "commit" && (
+              <>
+                <div className="flex items-center rounded-full border border-border-subtle bg-control p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setCommitType("output")}
+                    className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-all ${
+                      commitType === "output" ? "bg-segmented-active text-ink-primary shadow-sm" : "text-ink-secondary"
+                    }`}
+                  >
+                    Output
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCommitType("insight")}
+                    className={`flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-all ${
+                      commitType === "insight" ? "bg-segmented-active text-ink-primary shadow-sm" : "text-ink-secondary"
+                    }`}
+                  >
+                    <FlaskConical className="h-3 w-3 opacity-75" aria-hidden="true" />
+                    <span>Insight (R&D)</span>
+                  </button>
+                </div>
 
-              <select
-                aria-label="Work Domain"
-                value={domain}
-                onChange={(e) => setDomain(e.target.value as WorkDomain)}
-                className="rounded-lg border border-white/[0.08] bg-zinc-900 px-3 py-1.5 text-xs text-zinc-200 focus:outline-none"
-              >
-                {WORK_DOMAINS.map((d) => (
-                  <option key={d} value={d}>Domain: {d}</option>
-                ))}
-              </select>
+                <div className="flex items-center rounded-full border border-border-subtle bg-control p-0.5">
+                  {WORK_DOMAINS.map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={() => setDomain(d)}
+                      className={`rounded-full px-2.5 py-0.5 text-[11px] capitalize transition-all ${
+                        domain === d ? "bg-segmented-active font-medium text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"
+                      }`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
 
-              <div className="flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-zinc-900/70 px-2.5 py-1">
-                <Users className="h-3.5 w-3.5 text-zinc-400" aria-hidden="true" />
-                <input
-                  type="text"
-                  value={coAuthorsText}
-                  onChange={(e) => setCoAuthorsText(e.target.value)}
-                  placeholder="@rohan, @priya"
-                  className="w-32 bg-transparent text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none"
-                />
-              </div>
-            </>
-          )}
+                <div className="apple-pill flex items-center gap-1.5 rounded-full px-3 py-1">
+                  <Users className="h-3 w-3 text-ink-tertiary" aria-hidden="true" />
+                  <input
+                    type="text"
+                    value={coAuthorsText}
+                    onChange={(e) => setCoAuthorsText(e.target.value)}
+                    placeholder="Co-authors (@rohan)"
+                    className="w-28 bg-transparent text-[11px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
+                  />
+                </div>
+              </>
+            )}
+          </div>
 
-          <div className="flex flex-1 items-center gap-1.5 rounded-lg border border-white/[0.08] bg-zinc-900/70 px-2.5 py-1">
-            <GitPullRequest className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
+          <div className="apple-pill flex min-w-[230px] flex-1 items-center gap-1.5 rounded-full px-3 py-1 sm:max-w-xs">
+            <GitPullRequest className="h-3 w-3 text-ink-tertiary" aria-hidden="true" />
             <input
               type="url"
               value={githubPrUrl}
               onChange={(e) => setGithubPrUrl(e.target.value)}
-              placeholder="Attach GitHub App Verified PR URL..."
-              className="w-full bg-transparent text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none"
+              placeholder="Attach GitHub PR URL for 1.2x proof..."
+              className="w-full bg-transparent text-[11px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
             />
           </div>
         </div>
       </form>
 
       {showDrawer && (
-        <div className="mt-3 border-t border-white/[0.07] pt-3">
+        <div className="mt-3.5 border-t border-border-subtle pt-3">
           <ul className="space-y-1.5">
             {props.stagedLogs.map((l) => (
-              <li key={l.id} className="flex items-center justify-between rounded-lg bg-black/30 px-3 py-1.5 text-xs text-zinc-300">
-                <span>{l.rawText}</span>
-                <span className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] uppercase text-zinc-400">{l.source}</span>
+              <li key={l.id} className="apple-inset flex items-center justify-between rounded-[10px] px-3 py-2 text-[12px]">
+                <span className="text-ink-primary">{l.rawText}</span>
+                <span className="rounded-full bg-control px-2 py-0.5 font-mono text-[10px] uppercase text-ink-secondary">{l.source}</span>
               </li>
             ))}
           </ul>

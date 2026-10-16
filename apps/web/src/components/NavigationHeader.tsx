@@ -1,126 +1,135 @@
 "use client";
 
-import { AppRoutes } from "@volt/types";
+import { AppRoutes, type NavigationHeaderProps } from "@volt/types";
 import {
   Activity,
   Command,
-  GitBranch,
+  Moon,
   Scale,
   Settings,
   ShieldCheck,
+  Sun,
   Terminal,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export function NavigationHeader(props: {
-  readonly userHandle: string;
-  readonly pendingReviewsCount: number;
-  readonly onOpenCommandPalette: () => void;
-}) {
+export function NavigationHeader(props: NavigationHeaderProps) {
   const pathname = usePathname();
 
   const navLinks = [
     {
       href: AppRoutes.home,
-      label: "Live Stream",
+      label: "Stream",
       icon: Activity,
     },
     {
       href: AppRoutes.peerReviews,
-      label: "Peer Reviews",
+      label: "Reviews",
       icon: ShieldCheck,
       badge: props.pendingReviewsCount,
     },
     {
       href: AppRoutes.poolMatrix,
-      label: "Pool Share Matrix",
+      label: "Pool Share",
       icon: Scale,
     },
     {
       href: AppRoutes.settingsIntegrations,
-      label: "GitHub & Policies",
+      label: "Governance",
       icon: Settings,
     },
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.07] bg-[#09090B]/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
-        <div className="flex items-center gap-8">
-          <Link
-            href={AppRoutes.home}
-            className="flex items-center gap-2.5 text-zinc-100 transition hover:opacity-90"
-          >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
-              <Terminal className="h-4 w-4" aria-label="Volt Terminal Icon" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-mono text-sm font-semibold tracking-tight text-zinc-50">
-                volt
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-zinc-400">
-                Impact Engine
-              </span>
-            </div>
-          </Link>
+    <header className="apple-header sticky top-0 z-40">
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
+        <Link
+          href={AppRoutes.home}
+          className="group flex items-center gap-2.5 transition-opacity duration-200 ease-apple hover:opacity-80"
+        >
+          <div className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-border-subtle bg-control text-ink-primary transition-transform duration-200 ease-apple group-active:scale-95">
+            <Terminal className="h-3.5 w-3.5" aria-label="Volt Icon" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-[15px] font-semibold tracking-[-0.025em] text-ink-primary">
+              volt
+            </span>
+            <span className="hidden text-[11px] font-medium tracking-[-0.01em] text-ink-tertiary sm:inline">
+              Impact Engine
+            </span>
+          </div>
+        </Link>
 
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Main Navigation">
-            {navLinks.map((item) => {
-              const Icon = item.icon;
-              const isActive =
-                item.href === AppRoutes.home
-                  ? pathname === AppRoutes.home
-                  : pathname.startsWith(item.href);
+        <nav
+          className="flex items-center rounded-full border border-border-subtle bg-control p-1"
+          aria-label="Primary Navigation"
+        >
+          {navLinks.map((item) => {
+            const Icon = item.icon;
+            const isActive =
+              item.href === AppRoutes.home
+                ? pathname === AppRoutes.home
+                : pathname.startsWith(item.href);
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                    isActive
-                      ? "bg-white/[0.08] text-zinc-50"
-                      : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
-                  }`}
-                >
-                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>{item.label}</span>
-                  {item.badge !== undefined && item.badge > 0 && (
-                    <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-amber-400">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-[12px] font-medium tracking-[-0.01em] transition-all duration-200 ease-apple active:scale-[0.98] ${
+                  isActive
+                    ? "bg-segmented-active text-ink-primary shadow-sm"
+                    : "text-ink-secondary hover:text-ink-primary"
+                }`}
+              >
+                <Icon className="h-3.5 w-3.5 opacity-80" aria-hidden="true" />
+                <span>{item.label}</span>
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span className="ml-0.5 flex items-center gap-1 rounded-full bg-control px-1.5 py-0.2 font-mono text-[10px] font-semibold tabular-nums text-ink-primary">
+                    <span className="h-1.5 w-1.5 rounded-full bg-status-warn" />
+                    <span>{item.badge}</span>
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={props.onOpenCommandPalette}
-            className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-zinc-900/80 px-3 py-1.5 text-xs text-zinc-400 transition hover:border-white/[0.16] hover:text-zinc-200"
+            className="apple-pill flex items-center gap-2 rounded-full px-3 py-1 text-[12px] font-medium active:scale-[0.97]"
             aria-label="Open Command Palette"
           >
-            <Command className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Command</span>
-            <kbd className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-zinc-300">
-              Cmd+K
-            </kbd>
+            <Command className="h-3 w-3 opacity-75" aria-hidden="true" />
+            <span className="hidden sm:inline">Command</span>
+            <kbd className="font-mono text-[10px] text-ink-tertiary">⌘K</kbd>
           </button>
 
-          <Link
-            href={AppRoutes.settingsIntegrations}
-            className="flex items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-medium text-cyan-300 transition hover:bg-cyan-500/20"
+          <button
+            type="button"
+            onClick={props.onToggleTheme}
+            className="apple-pill flex h-7 w-7 items-center justify-center rounded-full active:scale-95"
+            aria-label={
+              props.theme === "dark" ? "Switch to Light Appearance" : "Switch to Dark Appearance"
+            }
+            title={
+              props.theme === "dark" ? "Switch to Apple Light Mode" : "Switch to macOS Dark Mode"
+            }
           >
-            <GitBranch className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Connect GitHub</span>
-          </Link>
+            {props.theme === "dark" ? (
+              <Sun className="h-3.5 w-3.5" aria-hidden="true" />
+            ) : (
+              <Moon className="h-3.5 w-3.5" aria-hidden="true" />
+            )}
+          </button>
 
-          <div className="flex items-center gap-2 rounded-lg border border-white/[0.07] bg-zinc-900/60 px-2.5 py-1 text-xs text-zinc-300">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            <span className="font-mono">@{props.userHandle}</span>
+          <div className="hidden items-center gap-1.5 rounded-full border border-border-subtle bg-control px-2.5 py-1 text-[12px] text-ink-secondary md:flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-status-ok" />
+            <span className="font-mono text-[11px] text-ink-primary">
+              @{props.userHandle}
+            </span>
           </div>
         </div>
       </div>

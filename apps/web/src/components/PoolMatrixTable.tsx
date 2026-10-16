@@ -9,102 +9,125 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
   return (
     <section className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="volt-glass rounded-2xl p-5">
-          <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="apple-surface rounded-[20px] p-5">
+          <div className="flex items-center justify-between text-[12px] text-ink-secondary">
             <span>Active Cycle</span>
-            <Scale className="h-4 w-4 text-emerald-400" aria-hidden="true" />
+            <Scale className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
           </div>
-          <p className="mt-2 font-mono text-lg font-semibold text-zinc-100">
+          <p className="mt-2 text-[17px] font-semibold tracking-[-0.02em] text-ink-primary">
             {summary.cycleName}
           </p>
-          <p className="mt-1 font-mono text-xs text-zinc-400">
-            {summary.startDate} to {summary.endDate}
+          <p className="mt-1 font-mono text-[11px] tabular-nums text-ink-tertiary">
+            {summary.startDate} — {summary.endDate}
           </p>
         </div>
 
-        <div className="volt-glass rounded-2xl p-5">
-          <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="apple-surface rounded-[20px] p-5">
+          <div className="flex items-center justify-between text-[12px] text-ink-secondary">
             <span>Total Team Weighted Output</span>
-            <TrendingUp className="h-4 w-4 text-cyan-400" aria-hidden="true" />
+            <TrendingUp className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
           </div>
-          <p className="mt-2 font-mono text-2xl font-semibold text-emerald-400">
-            {summary.totalTeamPoints.toFixed(2)} pts
+          <p className="mt-2 font-mono text-[26px] font-semibold tracking-[-0.035em] tabular-nums text-ink-primary">
+            {summary.totalTeamPoints.toFixed(2)}
+            <span className="ml-1 font-sans text-[12px] font-normal text-ink-tertiary">
+              pts
+            </span>
           </p>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-0.5 text-[11px] text-ink-tertiary">
             Across {summary.activeContributorCount} active contributors
           </p>
         </div>
 
-        <div className="volt-glass rounded-2xl p-5">
-          <div className="flex items-center justify-between text-xs text-zinc-400">
-            <span>Bonus Pool Budget</span>
-            <Users className="h-4 w-4 text-violet-400" aria-hidden="true" />
+        <div className="apple-surface rounded-[20px] p-5">
+          <div className="flex items-center justify-between text-[12px] text-ink-secondary">
+            <span>Bonus Pool Allocation</span>
+            <Users className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
           </div>
-          <p className="mt-2 font-mono text-2xl font-semibold text-zinc-100">
-            {summary.currency} {summary.poolBudget.toLocaleString()}
+          <div className="mt-2 flex items-baseline justify-between gap-2">
+            <p className="font-mono text-[26px] font-semibold tracking-[-0.035em] tabular-nums text-ink-primary">
+              {summary.currency} {summary.poolBudget.toLocaleString()}
+            </p>
+            {props.canManageCycles && (
+              <button
+                type="button"
+                onClick={props.onExportCsv}
+                className="apple-pill flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium active:scale-[0.98]"
+              >
+                <Download className="h-3 w-3" aria-hidden="true" />
+                <span>Export CSV</span>
+              </button>
+            )}
+          </div>
+          <p className="mt-0.5 text-[11px] text-ink-tertiary">
+            Proportional to verified cycle weightage
           </p>
-          {props.canManageCycles && (
-            <button
-              type="button"
-              onClick={props.onExportCsv}
-              className="mt-2 flex items-center gap-1.5 text-xs font-medium text-emerald-400 transition hover:text-emerald-300"
-            >
-              <Download className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Export Compensation Ledger (CSV)</span>
-            </button>
-          )}
         </div>
       </div>
 
-      <div className="volt-glass overflow-hidden rounded-2xl">
-        <div className="border-b border-white/[0.07] px-6 py-4">
-          <h2 className="text-sm font-semibold text-zinc-100">
+      <div className="apple-surface overflow-hidden rounded-[20px]">
+        <div className="border-b border-border-subtle px-6 py-4">
+          <h2 className="text-[15px] font-semibold tracking-[-0.018em] text-ink-primary">
             Dynamic Bonus Pool Share & Domain Leverage Matrix
           </h2>
-          <p className="text-xs text-zinc-400">
-            1-3 verified participants receive 100% point duplication; 4+ switch to 3/N split mode.
+          <p className="mt-0.5 text-[12px] text-ink-secondary">
+            1–3 verified participants receive 100% point duplication; 4+ switch to 3/N split mode.
           </p>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="border-b border-white/[0.07] bg-black/40 font-mono uppercase text-zinc-400">
+          <table className="w-full text-left text-[12px]">
+            <thead className="border-b border-border-subtle bg-control text-[11px] font-medium text-ink-secondary">
               <tr>
-                <th className="px-6 py-3">Contributor</th>
-                <th className="px-6 py-3">Approved Commits</th>
-                <th className="px-6 py-3">Collab Ratio</th>
-                <th className="px-6 py-3">Domain Breakdown (pts)</th>
-                <th className="px-6 py-3 text-right">Cycle Points</th>
-                <th className="px-6 py-3 text-right">Pool Share %</th>
+                <th className="px-6 py-3 font-medium">Contributor</th>
+                <th className="px-6 py-3 font-medium">Deliverables</th>
+                <th className="px-6 py-3 font-medium">Collab Ratio</th>
+                <th className="px-6 py-3 font-medium">Domain Distribution</th>
+                <th className="px-6 py-3 text-right font-medium">Cycle Points</th>
+                <th className="px-6 py-3 text-right font-medium">Pool Share</th>
                 {summary.poolBudget > 0 && (
-                  <th className="px-6 py-3 text-right">Calculated Payout</th>
+                  <th className="px-6 py-3 text-right font-medium">Calculated Payout</th>
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.06]">
+            <tbody className="divide-y divide-border-subtle">
               {summary.leaderboard.map((row) => (
-                <tr key={row.userId} className="transition hover:bg-white/[0.02]">
+                <tr
+                  key={row.userId}
+                  className="transition-colors duration-150 hover:bg-control"
+                >
                   <td className="px-6 py-4">
-                    <div className="font-medium text-zinc-100">{row.fullName}</div>
-                    <div className="font-mono text-zinc-400">@{row.handle}</div>
+                    <div className="font-medium text-ink-primary">{row.fullName}</div>
+                    <div className="font-mono text-[11px] text-ink-tertiary">
+                      @{row.handle}
+                    </div>
                   </td>
-                  <td className="px-6 py-4 font-mono text-zinc-200">
+                  <td className="px-6 py-4 font-mono tabular-nums text-ink-secondary">
                     {row.approvedCommitsCount}
                   </td>
-                  <td className="px-6 py-4 font-mono text-cyan-300">
+                  <td className="px-6 py-4 font-mono tabular-nums text-ink-secondary">
                     {row.collaborationRatioPercent.toFixed(0)}%
                   </td>
-                  <td className="px-6 py-4 font-mono text-[11px] text-zinc-300">
-                    eng:{row.domainBreakdown.engineering} | res:{row.domainBreakdown.research} | ops:{row.domainBreakdown.ops}
+                  <td className="px-6 py-4 font-mono text-[11px] tabular-nums text-ink-secondary">
+                    eng {row.domainBreakdown.engineering} · res {row.domainBreakdown.research} · ops {row.domainBreakdown.ops}
                   </td>
-                  <td className="px-6 py-4 text-right font-mono font-semibold text-emerald-400">
+                  <td className="px-6 py-4 text-right font-mono font-semibold tabular-nums text-ink-primary">
                     {row.totalCyclePoints.toFixed(2)}
                   </td>
-                  <td className="px-6 py-4 text-right font-mono font-semibold text-zinc-100">
-                    {row.poolSharePercent.toFixed(2)}%
+                  <td className="px-6 py-4 text-right">
+                    <div className="inline-flex items-center gap-2">
+                      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-control">
+                        <div
+                          className="h-full rounded-full bg-ink-primary transition-all duration-300 ease-apple"
+                          style={{ width: `${Math.min(100, row.poolSharePercent)}%` }}
+                        />
+                      </div>
+                      <span className="font-mono font-medium tabular-nums text-ink-primary">
+                        {row.poolSharePercent.toFixed(1)}%
+                      </span>
+                    </div>
                   </td>
                   {summary.poolBudget > 0 && (
-                    <td className="px-6 py-4 text-right font-mono font-semibold text-amber-300">
+                    <td className="px-6 py-4 text-right font-mono font-semibold tabular-nums text-ink-primary">
                       {summary.currency} {row.cyclePayout.toLocaleString()}
                     </td>
                   )}
