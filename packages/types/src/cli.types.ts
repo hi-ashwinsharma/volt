@@ -1,4 +1,4 @@
-import type { CaptureSource } from "./domain.types";
+import type { CaptureSource, CommitType, WorkDomain } from "./domain.types";
 
 export interface LocalQueuedLogRow {
   readonly id: number;
@@ -25,3 +25,54 @@ export interface CliParsedArgs {
   readonly positional: readonly string[];
   readonly flags: Readonly<Record<string, string | boolean | readonly string[]>>;
 }
+
+export interface OverlayCaptureResult {
+  readonly clientLogId: string;
+  readonly rawText: string;
+  readonly latencyMs: number;
+  readonly totalPendingCount: number;
+  readonly flushedToCloud: boolean;
+}
+
+export interface OverlayQuickState {
+  readonly mode: "stage" | "commit";
+  readonly text: string;
+  readonly commitType: CommitType;
+  readonly domain: WorkDomain;
+  readonly githubPrUrl: string;
+  readonly coAuthorsText: string;
+  readonly recentLogs: readonly LocalQueuedLogRow[];
+  readonly lastLatencyMs: number | null;
+  readonly statusMessage: string | null;
+}
+
+export type BotParsedAction =
+  | {
+      readonly kind: "stage_text";
+      readonly rawText: string;
+    }
+  | {
+      readonly kind: "commit";
+      readonly type: CommitType;
+      readonly domain: WorkDomain;
+      readonly summary: string;
+      readonly coAuthorHandles: readonly string[];
+    }
+  | {
+      readonly kind: "verify_coauthor";
+      readonly shortHash: string;
+      readonly decision: "verify" | "reject";
+      readonly contributionNote: string;
+    }
+  | {
+      readonly kind: "status";
+    }
+  | {
+      readonly kind: "voice_note";
+      readonly fileId: string;
+      readonly durationSec: number;
+    }
+  | {
+      readonly kind: "ignore";
+      readonly reason: string;
+    };
