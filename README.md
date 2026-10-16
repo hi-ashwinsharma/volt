@@ -6,7 +6,7 @@
 
 *Replace time sheets with cognitive complexity, business leverage, and verifiable empirical proof.*
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: AGPL-3.0 / Commercial](https://img.shields.io/badge/License-AGPL%20v3.0%20%2F%20Commercial-blue.svg)](LICENSE)
 [![Runtime: Bun](https://img.shields.io/badge/Runtime-Bun%201.2+-000000.svg?logo=bun)](https://bun.sh)
 [![Next.js: 15](https://img.shields.io/badge/Next.js-15.0%20(React%2019)-black.svg?logo=next.js)](https://nextjs.org)
 [![Fastify: 5](https://img.shields.io/badge/API-Fastify%205-000000.svg?logo=fastify)](https://fastify.dev)
@@ -15,7 +15,7 @@
 [![Cache: Upstash Redis](https://img.shields.io/badge/Cache-Upstash%20Redis-00E599.svg?logo=redis)](https://upstash.com)
 [![AI: Gemini 1.5 Flash](https://img.shields.io/badge/AI%20Judge-Gemini%201.5%20Flash-4285F4.svg?logo=google)](https://deepmind.google/technologies/gemini/)
 
-[Key Features](#key-features) • [Math Engine](#mathematical-weightage-engine-wc) • [System Architecture](#system-architecture) • [Monorepo Topology](#monorepo-topology) • [Quick Start](#quick-start) • [CLI & MCP](#cli-mcp--developer-tooling) • [Documentation](#documentation-suite) • [Contributing](#contributing)
+[Key Features](#key-features) • [Math Engine](#mathematical-weightage-engine-wc) • [System Architecture](#system-architecture) • [Commercial Licensing](#commercial-licensing--enterprise-support) • [Quick Start](#quick-start) • [CLI & MCP](#cli-mcp--developer-tooling) • [Documentation](#documentation-suite)
 
 </div>
 
@@ -286,9 +286,32 @@ The complete engineering specification is documented in [`docs/`](docs/):
 
 ---
 
+---
+
+## Commercial Licensing & Enterprise Support
+
+`volt` is open source under the **GNU Affero General Public License v3 (AGPLv3)**.
+
+### For Open Source & Community Users
+You are free to use, run, study, and modify `volt` under the terms of the AGPLv3. If you run a modified version of `volt` over a network (e.g., hosting it for your users or internal team), you are required under the AGPLv3 to make your modified source code publicly accessible under the same license.
+
+### For Companies & Commercial Organizations
+If your organization wishes to deploy `volt` internally or integrate it into proprietary infrastructure **without** being bound by the copyleft obligations of the AGPLv3 (e.g. keeping your internal compensation data, custom organizational rubrics, or proprietary extensions closed-source), you can purchase a **Commercial Enterprise License**.
+
+Our Commercial Offerings include:
+* **Self-Hosted Enterprise License:** Closed-source exemption for private deployments, custom internal branding, and proprietary PBAC integrations.
+* **Fully Managed Cloud (SaaS):** Zero-ops hosted infrastructure with managed Supabase DB, Google Cloud Run ingestion, automated Gemini 1.5 Flash AI grading, and Telegram bots.
+* **Dedicated Support & Custom Integrations:** Priority SLAs, custom HR/payroll connectors, and tailored impact rubric calibration.
+
+To discuss commercial licensing terms or request an enterprise demo:
+* **Email:** [hi.ashwinsharma@gmail.com](mailto:hi.ashwinsharma@gmail.com)
+* **Website:** [https://hi-ashwin.xyz](https://hi-ashwin.xyz)
+
+---
+
 ## Contributing
 
-We welcome contributions adhering to our architectural invariants:
+We welcome community contributions adhering to our architectural invariants:
 
 1. Create a feature branch from `main`:
    ```bash
@@ -302,8 +325,11 @@ We welcome contributions adhering to our architectural invariants:
    ```
 4. Submit a Pull Request with linked issues and verifiable artifacts.
 
+> *Note: Contributors assign copyright or grant broad usage rights to the project maintainers to allow ongoing dual licensing.*
+
 ---
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+Dual-licensed under the **GNU Affero General Public License v3.0 (AGPLv3)** and a **Commercial Enterprise License**. See [`LICENSE`](LICENSE) for complete details.
+
