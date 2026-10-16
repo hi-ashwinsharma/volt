@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Chip } from "@heroui/react";
+import { Card, Chip, Surface, Typography } from "@heroui/react";
 import type { CommitCardProps } from "@volt/types";
 import {
   FileCode2,
@@ -28,12 +28,12 @@ export function CommitCard(props: CommitCardProps) {
         : { color: "warning" as const, label: "Co-Author Handshake" };
 
   return (
-    <Card className="apple-surface rounded-[20px] p-5 sm:p-6 relative">
+    <Card variant="default" className="rounded-2xl border border-border p-5 relative">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
         <div className="min-w-0 flex-1 space-y-2">
           {/* Metadata Row */}
-          <div className="flex flex-wrap items-center gap-2 text-[11px]">
-            <Chip size="sm" variant="secondary" className="font-mono text-ink-secondary">
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <Chip size="sm" variant="secondary" className="font-mono">
               <Chip.Label>{commit.shortHash}</Chip.Label>
             </Chip>
 
@@ -49,16 +49,16 @@ export function CommitCard(props: CommitCardProps) {
               </Chip>
             )}
 
-            <Chip size="sm" variant="secondary" className="capitalize text-ink-secondary font-medium">
+            <Chip size="sm" variant="secondary" className="capitalize font-medium">
               <Chip.Label>{commit.domain}</Chip.Label>
             </Chip>
 
-            <span className="text-ink-tertiary">·</span>
+            <Typography type="body-xs" color="muted">·</Typography>
 
-            <span className="font-mono text-ink-secondary">@{commit.authorHandle}</span>
+            <Typography type="body-xs" color="muted" className="font-mono">@{commit.authorHandle}</Typography>
 
             {commit.coAuthors.length > 0 && (
-              <Chip size="sm" variant="secondary" className="text-ink-secondary">
+              <Chip size="sm" variant="secondary">
                 <Users className="h-3 w-3 opacity-70" aria-hidden="true" />
                 <Chip.Label>{commit.coAuthors.map((c) => `@${c.handle}`).join(", ")}</Chip.Label>
               </Chip>
@@ -66,9 +66,9 @@ export function CommitCard(props: CommitCardProps) {
           </div>
 
           {/* Deliverable Narrative */}
-          <h3 className="text-[15px] font-medium leading-relaxed tracking-[-0.015em] text-ink-primary">
+          <Typography type="h4" className="font-medium leading-relaxed text-foreground">
             {commit.summary}
-          </h3>
+          </Typography>
 
           {/* Interactive Evidence and Equation Bar */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
@@ -94,69 +94,75 @@ export function CommitCard(props: CommitCardProps) {
                 href={commit.githubPrUrl ?? "#"}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 rounded-full bg-accent-blue-bg px-3 py-1 text-[11px] font-medium text-accent-blue hover:opacity-85 transition-opacity"
+                className="flex items-center gap-1.5 rounded-full border border-border bg-surface-secondary px-3 py-1 text-[11px] font-medium text-accent hover:opacity-80 transition-opacity"
               >
                 <GitPullRequest className="h-3 w-3" aria-hidden="true" />
-                <span>GitHub App Verified PR</span>
+                <Typography type="body-xs" className="text-accent font-medium">GitHub App Verified PR</Typography>
               </a>
             )}
 
             {commit.artifactType === "file_upload" && (
-              <span className="flex items-center gap-1.5 rounded-full bg-accent-indigo-bg px-3 py-1 text-[11px] font-medium text-accent-indigo">
+              <div className="flex items-center gap-1.5 rounded-full border border-border bg-surface-secondary px-3 py-1 text-[11px] font-medium text-accent">
                 <FileCode2 className="h-3 w-3" aria-hidden="true" />
-                <span>Empirical .ipynb Artifact</span>
-              </span>
+                <Typography type="body-xs" className="text-accent font-medium">Empirical .ipynb Artifact</Typography>
+              </div>
             )}
           </div>
         </div>
 
         {/* Score Readout on the Right */}
-        <div className="flex flex-row items-center justify-between border-t border-border-subtle pt-3 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0">
+        <div className="flex flex-row items-center justify-between border-t border-border pt-3 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0">
           <Chip color={statusMeta.color} size="sm" variant="secondary" className="font-medium">
             <Chip.Label>{statusMeta.label}</Chip.Label>
           </Chip>
 
-          <div className="mt-0 text-right sm:mt-2.5">
-            <span className="font-mono text-[26px] font-semibold tracking-[-0.035em] tabular-nums text-ink-primary">
+          <div className="mt-0 text-right sm:mt-2">
+            <Typography type="h2" className="font-mono font-semibold tabular-nums text-foreground inline">
               {(commit.currentWC ?? 0).toFixed(2)}
-            </span>
-            <span className="ml-1 text-[11px] text-ink-tertiary">pts</span>
+            </Typography>
+            <Typography type="body-xs" color="muted" className="ml-1 inline">
+              pts
+            </Typography>
           </div>
         </div>
       </div>
 
       {/* Expandable Audit Ledger Details */}
       {isExpanded && audit && (
-        <div className="apple-inset mt-4 space-y-2.5 rounded-[14px] p-4 text-[12px]">
-          <div className="flex items-center justify-between text-ink-secondary">
-            <span className="flex items-center gap-1.5 font-medium text-ink-primary">
-              <Sparkles className="h-3.5 w-3.5 text-accent-emerald" aria-hidden="true" />
-              <span>
+        <Surface variant="secondary" className="mt-4 space-y-2.5 rounded-xl p-4 border border-border">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-success" aria-hidden="true" />
+              <Typography type="body-sm" className="font-medium">
                 {audit.isAiGrade
                   ? "Gemini 1.5 Flash AI Judge Rationale"
                   : `Peer Reviewed by @${audit.gradedByHandle}`}
-              </span>
-            </span>
-            <span className="font-mono text-[11px] text-ink-tertiary">
+              </Typography>
+            </div>
+            <Typography type="body-xs" color="muted" className="font-mono">
               Immutable Ledger #{audit.id}
-            </span>
+            </Typography>
           </div>
-          <p className="leading-relaxed text-ink-secondary">{audit.reasoning}</p>
+          <Typography type="body-sm" color="muted" className="leading-relaxed">
+            {audit.reasoning}
+          </Typography>
           {commit.stagedSnapshot.length > 0 && (
-            <div className="border-t border-border-subtle pt-2.5">
-              <p className="mb-1 text-[11px] font-medium text-ink-tertiary">
+            <div className="border-t border-border pt-2.5">
+              <Typography type="body-xs" color="muted" className="mb-1 font-medium">
                 Bundled Micro-Logs from Buffer ({commit.stagedSnapshot.length})
-              </p>
-              <ul className="space-y-1 font-mono text-[11px] text-ink-secondary">
+              </Typography>
+              <ul className="space-y-1 font-mono text-[11px]">
                 {commit.stagedSnapshot.map((s) => (
                   <li key={s.id}>
-                    • [{s.source}] {s.rawText}
+                    <Typography type="body-xs" color="muted">
+                      • [{s.source}] {s.rawText}
+                    </Typography>
                   </li>
                 ))}
               </ul>
             </div>
           )}
-        </div>
+        </Surface>
       )}
     </Card>
   );

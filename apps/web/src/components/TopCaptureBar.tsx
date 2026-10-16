@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Chip, Input } from "@heroui/react";
+import { Button, Chip, Input, Surface, Typography } from "@heroui/react";
 import {
   WORK_DOMAINS,
   type CommandBarCaptureMode,
@@ -50,48 +50,46 @@ export function TopCaptureBar(props: TopCaptureBarProps) {
   };
 
   return (
-    <Card aria-label="Quick Capture and Deliverable Composer" className="apple-composer rounded-[20px] p-5 sm:p-6">
+    <Surface aria-label="Quick Capture and Deliverable Composer" variant="default" className="rounded-2xl border border-border p-5">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center rounded-full border border-border-subtle bg-control p-0.5">
-          <button
-            type="button"
+        <div className="flex items-center gap-1 rounded-full border border-border bg-surface-secondary p-1">
+          <Button
+            size="sm"
+            variant={mode === "stage" ? "primary" : "ghost"}
             onClick={() => setMode("stage")}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium transition-all ${
-              mode === "stage" ? "bg-segmented-active text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"
-            }`}
+            className="rounded-full"
           >
-            <Plus className="h-3 w-3" aria-hidden="true" />
-            <span>Stage Micro-Log</span>
-          </button>
-          <button
-            type="button"
+            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+            <Typography type="body-xs">Stage Micro-Log</Typography>
+          </Button>
+          <Button
+            size="sm"
+            variant={mode === "commit" ? "primary" : "ghost"}
             onClick={() => setMode("commit")}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium transition-all ${
-              mode === "commit" ? "bg-segmented-active text-ink-primary shadow-sm" : "text-ink-secondary hover:text-ink-primary"
-            }`}
+            className="rounded-full"
           >
             <GitCommitHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Synthesize Commit</span>
-          </button>
+            <Typography type="body-xs">Synthesize Commit</Typography>
+          </Button>
         </div>
 
         <Button
           size="sm"
-          variant="ghost"
+          variant="outline"
           onClick={() => setShowDrawer((p) => !p)}
-          className="apple-pill flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium"
+          className="rounded-full flex items-center gap-1.5 px-3 py-1"
         >
-          <Layers className="h-3 w-3 opacity-70" aria-hidden="true" />
+          <Layers className="h-3 w-3 text-muted" aria-hidden="true" />
           <Chip size="sm" variant="soft" className="h-4 px-1 font-mono font-semibold">
             <Chip.Label>{props.stagedLogs.length}</Chip.Label>
           </Chip>
-          <span>staged in buffer</span>
-          <ChevronDown className={`h-3 w-3 transition-transform ${showDrawer ? "rotate-180" : ""}`} aria-hidden="true" />
+          <Typography type="body-xs" color="muted">staged in buffer</Typography>
+          <ChevronDown className={`h-3 w-3 text-muted transition-transform ${showDrawer ? "rotate-180" : ""}`} aria-hidden="true" />
         </Button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="apple-inset flex items-center gap-3 rounded-[14px] px-4 py-2.5">
+        <div className="flex items-center gap-2">
           <Input
             aria-label="Deliverable or Micro-Log text"
             fullWidth
@@ -102,88 +100,91 @@ export function TopCaptureBar(props: TopCaptureBarProps) {
                 ? "Log micro-progress in under 3 seconds (e.g., profiled AWQ kernel latency)..."
                 : "Describe completed deliverable or disproved R&D hypothesis..."
             }
-            className="flex-1 bg-transparent text-[14px] tracking-[-0.012em] text-ink-primary placeholder-ink-tertiary focus:outline-none"
+            variant="secondary"
           />
           <Button
             type="submit"
-            size="sm"
+            size="md"
             variant="primary"
             isDisabled={props.isSubmitting || !inputText.trim()}
-            className="apple-btn-primary flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[12px] font-medium"
+            className="rounded-xl px-4 shrink-0"
           >
-            <span>{mode === "stage" ? "Stage" : "Commit"}</span>
+            <Typography type="body-sm" className="font-medium text-primary-foreground">{mode === "stage" ? "Stage" : "Commit"}</Typography>
             <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
           </Button>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5 text-[11px]">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
           <div className="flex flex-wrap items-center gap-1.5">
             {mode === "commit" && (
               <>
-                <div className="flex items-center rounded-full border border-border-subtle bg-control p-0.5">
-                  <button
-                    type="button"
+                <div className="flex items-center gap-1 rounded-full border border-border bg-surface-secondary p-0.5">
+                  <Button
+                    size="sm"
+                    variant={commitType === "output" ? "secondary" : "ghost"}
                     onClick={() => setCommitType("output")}
-                    className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${commitType === "output" ? "bg-segmented-active text-ink-primary shadow-sm" : "text-ink-secondary"}`}
+                    className="h-6 px-2 text-[11px] rounded-full"
                   >
-                    Output
-                  </button>
-                  <button
-                    type="button"
+                    <Typography type="body-xs">Output</Typography>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={commitType === "insight" ? "secondary" : "ghost"}
                     onClick={() => setCommitType("insight")}
-                    className={`flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium ${commitType === "insight" ? "bg-segmented-active text-ink-primary shadow-sm" : "text-ink-secondary"}`}
+                    className="h-6 px-2 text-[11px] rounded-full"
                   >
-                    <FlaskConical className="h-3 w-3 opacity-75" aria-hidden="true" />
-                    <span>Insight (R&D)</span>
-                  </button>
+                    <FlaskConical className="h-3 w-3" aria-hidden="true" />
+                    <Typography type="body-xs">Insight (R&D)</Typography>
+                  </Button>
                 </div>
 
-                <div className="flex items-center rounded-full border border-border-subtle bg-control p-0.5">
+                <div className="flex items-center gap-1 rounded-full border border-border bg-surface-secondary p-0.5">
                   {WORK_DOMAINS.map((d) => (
-                    <button
+                    <Button
                       key={d}
-                      type="button"
+                      size="sm"
+                      variant={domain === d ? "secondary" : "ghost"}
                       onClick={() => setDomain(d)}
-                      className={`rounded-full px-2.5 py-0.5 text-[11px] capitalize ${domain === d ? "bg-segmented-active font-medium text-ink-primary shadow-sm" : "text-ink-secondary"}`}
+                      className="h-6 px-2 text-[11px] capitalize rounded-full"
                     >
-                      {d}
-                    </button>
+                      <Typography type="body-xs">{d}</Typography>
+                    </Button>
                   ))}
                 </div>
 
-                <div className="apple-pill flex items-center gap-1.5 rounded-full px-3 py-1">
-                  <Users className="h-3 w-3 text-ink-tertiary" aria-hidden="true" />
+                <div className="flex items-center gap-1.5 rounded-full border border-border bg-surface-secondary px-3 py-0.5">
+                  <Users className="h-3 w-3 text-muted" aria-hidden="true" />
                   <input
                     type="text"
                     value={coAuthorsText}
                     onChange={(e) => setCoAuthorsText(e.target.value)}
                     placeholder="Co-authors (@rohan)"
-                    className="w-28 bg-transparent text-[11px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
+                    className="w-28 bg-transparent text-[11px] text-foreground placeholder:text-muted focus:outline-none"
                   />
                 </div>
               </>
             )}
           </div>
 
-          <div className="apple-pill flex min-w-[230px] flex-1 items-center gap-1.5 rounded-full px-3 py-1 sm:max-w-xs">
-            <GitPullRequest className="h-3 w-3 text-ink-tertiary" aria-hidden="true" />
+          <div className="flex min-w-[240px] flex-1 items-center gap-1.5 rounded-full border border-border bg-surface-secondary px-3 py-0.5 sm:max-w-xs">
+            <GitPullRequest className="h-3 w-3 text-muted" aria-hidden="true" />
             <input
               type="url"
               value={githubPrUrl}
               onChange={(e) => setGithubPrUrl(e.target.value)}
               placeholder="Attach GitHub PR URL for 1.2x proof..."
-              className="w-full bg-transparent text-[11px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
+              className="w-full bg-transparent text-[11px] text-foreground placeholder:text-muted focus:outline-none"
             />
           </div>
         </div>
       </form>
 
       {showDrawer && (
-        <div className="mt-3.5 border-t border-border-subtle pt-3">
+        <div className="mt-4 border-t border-border pt-3">
           <ul className="space-y-1.5">
             {props.stagedLogs.map((l) => (
-              <li key={l.id} className="apple-inset flex items-center justify-between rounded-[10px] px-3 py-2 text-[12px]">
-                <span className="text-ink-primary">{l.rawText}</span>
+              <li key={l.id} className="flex items-center justify-between rounded-lg border border-border bg-surface-secondary px-3 py-2 text-xs">
+                <Typography type="body-sm">{l.rawText}</Typography>
                 <Chip size="sm" variant="secondary" className="font-mono text-[10px] uppercase">
                   <Chip.Label>{l.source}</Chip.Label>
                 </Chip>
@@ -192,6 +193,6 @@ export function TopCaptureBar(props: TopCaptureBarProps) {
           </ul>
         </div>
       )}
-    </Card>
+    </Surface>
   );
 }

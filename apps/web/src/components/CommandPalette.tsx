@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Kbd } from "@heroui/react";
+import { Button, Input, Kbd, Surface, Typography } from "@heroui/react";
 import { AppRoutes, type CommandPaletteProps } from "@volt/types";
 import {
   Activity,
@@ -78,104 +78,108 @@ export function CommandPalette(props: CommandPaletteProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 pt-24 backdrop-blur-md transition-opacity"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 pt-24 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label="Volt Command Palette"
       onClick={props.onClose}
     >
-      <Card
-        className="apple-composer w-full max-w-xl overflow-hidden rounded-[20px] p-2"
+      <Surface
+        variant="default"
+        className="w-full max-w-xl overflow-hidden rounded-2xl border border-border shadow-2xl p-3"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-2.5 border-b border-border-subtle px-3.5 py-2.5">
-          <Command className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
-          <input
-            type="text"
+        <div className="flex items-center gap-2.5 border-b border-border pb-3 px-1">
+          <Command className="h-4 w-4 text-muted shrink-0" aria-hidden="true" />
+          <Input
+            aria-label="Search or stage"
             autoFocus
+            fullWidth
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type a command or micro-log to stage immediately..."
-            className="w-full bg-transparent text-[14px] text-ink-primary placeholder-ink-tertiary focus:outline-none"
+            variant="secondary"
           />
           <Button
             size="sm"
             variant="ghost"
             isIconOnly
             onClick={props.onClose}
-            className="apple-pill rounded-full p-1 h-6 w-6"
             aria-label="Close Command Palette"
           >
-            <X className="h-3.5 w-3.5" aria-hidden="true" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
 
-        <Card.Content className="mt-1.5 space-y-1 p-1">
+        <div className="mt-2 space-y-1">
           {query.trim().length > 0 && (
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              fullWidth
               onClick={async () => {
                 await props.onQuickStage(query.trim());
                 setQuery("");
                 props.onClose();
               }}
-              className="flex w-full items-center justify-between rounded-[12px] bg-control px-3.5 py-2.5 text-left text-[12px] text-ink-primary transition hover:bg-control-hover"
+              className="flex justify-between items-center py-2 px-3 text-left h-auto"
             >
-              <span className="flex items-center gap-2">
-                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Stage micro-log: &ldquo;{query.trim()}&rdquo;</span>
-              </span>
-              <CornerDownLeft className="h-3.5 w-3.5 text-ink-tertiary" aria-hidden="true" />
-            </button>
+              <div className="flex items-center gap-2">
+                <Plus className="h-4 w-4 text-accent" aria-hidden="true" />
+                <Typography type="body-sm">Stage micro-log: &ldquo;{query.trim()}&rdquo;</Typography>
+              </div>
+              <CornerDownLeft className="h-4 w-4 text-muted" aria-hidden="true" />
+            </Button>
           )}
 
           {filtered.map((item) => {
             const Icon = item.icon;
             return (
-              <button
+              <Button
                 key={item.label}
-                type="button"
+                variant="ghost"
+                fullWidth
                 onClick={item.onSelect}
-                className="flex w-full items-center justify-between rounded-[12px] px-3.5 py-2.5 text-left text-[13px] text-ink-secondary transition hover:bg-control hover:text-ink-primary"
+                className="flex justify-between items-center py-2 px-3 text-left h-auto hover:bg-surface-secondary"
               >
-                <span className="flex items-center gap-2.5">
-                  <Icon className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
-                  <span>{item.label}</span>
-                </span>
-                <Kbd className="text-[10px]">
+                <div className="flex items-center gap-2.5">
+                  <Icon className="h-4 w-4 text-muted" aria-hidden="true" />
+                  <Typography type="body-sm">{item.label}</Typography>
+                </div>
+                <Kbd>
                   <Kbd.Content>{item.shortcut}</Kbd.Content>
                 </Kbd>
-              </button>
+              </Button>
             );
           })}
 
           {props.onToggleTheme && (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              fullWidth
               onClick={() => {
                 props.onToggleTheme?.();
                 props.onClose();
               }}
-              className="flex w-full items-center justify-between rounded-[12px] px-3.5 py-2.5 text-left text-[13px] text-ink-secondary transition hover:bg-control hover:text-ink-primary"
+              className="flex justify-between items-center py-2 px-3 text-left h-auto hover:bg-surface-secondary"
             >
-              <span className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5">
                 {props.theme === "dark" ? (
-                  <Sun className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
+                  <Sun className="h-4 w-4 text-muted" aria-hidden="true" />
                 ) : (
-                  <Moon className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
+                  <Moon className="h-4 w-4 text-muted" aria-hidden="true" />
                 )}
-                <span>
+                <Typography type="body-sm">
                   Switch to {props.theme === "dark" ? "Light" : "Dark"} Appearance
-                </span>
-              </span>
-              <Kbd className="text-[10px]">
+                </Typography>
+              </div>
+              <Kbd>
                 <Kbd.Content>Theme</Kbd.Content>
               </Kbd>
-            </button>
+            </Button>
           )}
-        </Card.Content>
-      </Card>
+        </div>
+      </Surface>
     </div>
   );
 }

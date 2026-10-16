@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Chip } from "@heroui/react";
+import { Card, Chip, Surface, Typography } from "@heroui/react";
 import { calculateCommitWeightage } from "@volt/math";
 import type { ReviewStageFilter } from "@volt/types";
 import { CheckCircle2, ShieldCheck, Users } from "lucide-react";
@@ -31,7 +31,7 @@ export default function PeerReviewsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-canvas pb-20">
+    <div className="min-h-screen bg-background text-foreground pb-20">
       <NavigationHeader
         userHandle={state.currentUser.handle}
         availableHandles={state.availablePersonas.map((p) => p.handle)}
@@ -55,15 +55,19 @@ export default function PeerReviewsPage() {
         {/* Co-Author Handshake Section */}
         {(filter === "all_pending" || filter === "handshakes") && (
           <section className="space-y-3.5">
-            <div className="flex items-center gap-2 text-[13px] font-semibold text-ink-primary">
-              <Users className="h-4 w-4 text-accent-amber" aria-hidden="true" />
-              <h2>Sequential Co-Author Handshake Requests (Pre-AI Gate)</h2>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-warning" aria-hidden="true" />
+              <Typography type="h3" className="font-semibold text-foreground">
+                Sequential Co-Author Handshake Requests (Pre-AI Gate)
+              </Typography>
             </div>
             {pendingCoAuthorCommits.length === 0 ? (
               filter === "handshakes" && (
-                <Card className="apple-surface rounded-[20px] p-6 text-[13px] text-ink-tertiary text-center">
-                  Zero pending co-author handshakes awaiting verification.
-                </Card>
+                <Surface variant="secondary" className="rounded-2xl border border-border p-6 text-center">
+                  <Typography type="body-sm" color="muted">
+                    Zero pending co-author handshakes awaiting verification.
+                  </Typography>
+                </Surface>
               )
             ) : (
               pendingCoAuthorCommits.map((c) => (
@@ -81,15 +85,19 @@ export default function PeerReviewsPage() {
         {/* High-Stakes Peer Review Workbench Section */}
         {(filter === "all_pending" || filter === "peer_reviews") && (
           <section className="space-y-4">
-            <div className="flex items-center gap-2 text-[13px] font-semibold text-ink-primary">
-              <ShieldCheck className="h-4 w-4 text-accent-amber" aria-hidden="true" />
-              <h2>High-Stakes Peer Review Queue (&gt;15.00 pts)</h2>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-warning" aria-hidden="true" />
+              <Typography type="h3" className="font-semibold text-foreground">
+                High-Stakes Peer Review Queue (&gt;15.00 pts)
+              </Typography>
             </div>
             {pendingPeerCommits.length === 0 ? (
               filter === "peer_reviews" && (
-                <Card className="apple-surface rounded-[20px] p-6 text-[13px] text-ink-tertiary text-center">
-                  All high-stakes deliverables have been finalized and recorded into score_audits.
-                </Card>
+                <Surface variant="secondary" className="rounded-2xl border border-border p-6 text-center">
+                  <Typography type="body-sm" color="muted">
+                    All high-stakes deliverables have been finalized and recorded into score_audits.
+                  </Typography>
+                </Surface>
               )
             ) : (
               pendingPeerCommits.map((c) => (
@@ -113,29 +121,33 @@ export default function PeerReviewsPage() {
         {/* Completed Audits View */}
         {filter === "audited" && (
           <section className="space-y-3.5">
-            <div className="flex items-center gap-2 text-[13px] font-semibold text-ink-primary">
-              <CheckCircle2 className="h-4 w-4 text-accent-emerald" aria-hidden="true" />
-              <h2>Immutable Audit Ledger History</h2>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-success" aria-hidden="true" />
+              <Typography type="h3" className="font-semibold text-foreground">
+                Immutable Audit Ledger History
+              </Typography>
             </div>
             {auditedCommits.map((c) => (
-              <Card key={c.id} className="apple-surface rounded-[20px] p-5 sm:p-6 flex items-center justify-between gap-4">
+              <Card key={c.id} variant="default" className="rounded-2xl border border-border p-5 sm:p-6 flex items-center justify-between gap-4">
                 <div>
-                  <div className="flex items-center gap-2 text-[11px] font-mono text-ink-secondary mb-1">
+                  <div className="flex items-center gap-2 text-xs font-mono mb-1">
                     <Chip size="sm" variant="secondary">
                       <Chip.Label>[{c.shortHash}]</Chip.Label>
                     </Chip>
-                    <span>by @{c.authorHandle}</span>
+                    <Typography type="body-xs" color="muted">by @{c.authorHandle}</Typography>
                     <Chip color="success" size="sm" variant="soft" className="uppercase font-semibold">
                       <Chip.Label>{c.status}</Chip.Label>
                     </Chip>
                   </div>
-                  <p className="text-[14px] font-medium text-ink-primary">{c.summary}</p>
+                  <Typography type="body-sm" className="font-medium text-foreground">{c.summary}</Typography>
                 </div>
                 <div className="text-right">
-                  <span className="font-mono text-[22px] font-semibold text-ink-primary">
+                  <Typography type="h2" className="font-mono font-semibold tabular-nums text-foreground inline">
                     {(c.currentWC ?? 0).toFixed(2)}
-                  </span>
-                  <span className="ml-1 text-[11px] text-ink-tertiary">pts</span>
+                  </Typography>
+                  <Typography type="body-xs" color="muted" className="ml-1 inline">
+                    pts
+                  </Typography>
                 </div>
               </Card>
             ))}

@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, Chip, Kbd } from "@heroui/react";
+import { Button, Chip, Kbd, Surface, Typography } from "@heroui/react";
+import { buttonVariants } from "@heroui/styles";
 import { AppRoutes, type NavigationHeaderProps } from "@volt/types";
 import {
   Activity,
@@ -44,30 +45,24 @@ export function NavigationHeader(props: NavigationHeaderProps) {
   ];
 
   return (
-    <header className="apple-header sticky top-0 z-40">
+    <header className="sticky top-0 z-40 border-b border-border bg-surface/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-[1360px] items-center justify-between px-6">
         <div className="flex items-center gap-6">
-          <Link
-            href={AppRoutes.home}
-            className="group flex items-center gap-2.5 transition-opacity duration-200 ease-apple hover:opacity-85"
-          >
-            <div className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-border-subtle bg-control text-ink-primary">
-              <Terminal className="h-3.5 w-3.5 text-accent-emerald" aria-label="Volt Icon" />
+          <Link href={AppRoutes.home} className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-surface-secondary text-foreground">
+              <Terminal className="h-3.5 w-3.5 text-success" aria-label="Volt Icon" />
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-[15px] font-semibold tracking-[-0.025em] text-ink-primary">
+              <Typography type="h4" className="font-semibold tracking-tight text-foreground">
                 volt
-              </span>
-              <span className="hidden text-[11px] font-medium tracking-[-0.01em] text-ink-tertiary sm:inline">
+              </Typography>
+              <Typography type="body-xs" color="muted" className="hidden sm:inline">
                 Impact Engine
-              </span>
+              </Typography>
             </div>
           </Link>
 
-          <nav
-            className="flex items-center rounded-full border border-border-subtle bg-control p-1"
-            aria-label="Primary Navigation"
-          >
+          <nav className="flex items-center gap-1 rounded-full border border-border bg-surface-secondary p-1" aria-label="Primary Navigation">
             {navLinks.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -79,16 +74,17 @@ export function NavigationHeader(props: NavigationHeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-[12px] font-medium tracking-[-0.01em] transition-all duration-200 ease-apple active:scale-[0.98] ${
-                    isActive
-                      ? "bg-segmented-active text-ink-primary shadow-sm"
-                      : "text-ink-secondary hover:text-ink-primary"
-                  }`}
+                  className={`${buttonVariants({
+                    variant: isActive ? "secondary" : "ghost",
+                    size: "sm",
+                  })} flex items-center gap-1.5 rounded-full px-3 py-1`}
                 >
-                  <Icon className="h-3.5 w-3.5 opacity-80" aria-hidden="true" />
-                  <span>{item.label}</span>
+                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                  <Typography type="body-xs" color={isActive ? "default" : "muted"}>
+                    {item.label}
+                  </Typography>
                   {item.badge !== undefined && item.badge > 0 && (
-                    <Chip color="warning" size="sm" variant="soft" className="ml-0.5 h-4 px-1 text-[10px]">
+                    <Chip color="warning" size="sm" variant="soft" className="h-4 px-1 text-[10px]">
                       <Chip.Label>{item.badge}</Chip.Label>
                     </Chip>
                   )}
@@ -101,13 +97,15 @@ export function NavigationHeader(props: NavigationHeaderProps) {
         <div className="flex items-center gap-2.5">
           <Button
             size="sm"
-            variant="ghost"
+            variant="outline"
             onClick={props.onOpenCommandPalette}
-            className="apple-pill flex items-center gap-2 rounded-full px-3 py-1 text-[12px] font-medium"
+            className="flex items-center gap-2 rounded-full px-3 py-1 text-xs"
             aria-label="Open Command Palette"
           >
-            <Command className="h-3 w-3 opacity-75" aria-hidden="true" />
-            <span className="hidden sm:inline">Command</span>
+            <Command className="h-3 w-3 text-muted" aria-hidden="true" />
+            <Typography type="body-xs" color="muted" className="hidden sm:inline">
+              Command
+            </Typography>
             <Kbd className="text-[10px]">
               <Kbd.Abbr keyValue="command" />
               <Kbd.Content>K</Kbd.Content>
@@ -116,41 +114,37 @@ export function NavigationHeader(props: NavigationHeaderProps) {
 
           <Button
             size="sm"
-            variant="ghost"
+            variant="outline"
             isIconOnly
             onClick={props.onToggleTheme}
-            className="apple-pill flex h-7 w-7 items-center justify-center rounded-full"
-            aria-label={props.theme === "dark" ? "Switch to Apple Light Mode" : "Switch to macOS Dark Mode"}
+            className="h-8 w-8 rounded-full"
+            aria-label={props.theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
             {props.theme === "dark" ? (
-              <Sun className="h-3.5 w-3.5" aria-hidden="true" />
+              <Sun className="h-3.5 w-3.5 text-muted" aria-hidden="true" />
             ) : (
-              <Moon className="h-3.5 w-3.5" aria-hidden="true" />
+              <Moon className="h-3.5 w-3.5 text-muted" aria-hidden="true" />
             )}
           </Button>
 
-          {/* Interactive Persona Switcher */}
           {props.availableHandles && props.availableHandles.length > 0 && (
-            <div className="flex items-center gap-1.5 rounded-full border border-border-subtle bg-control px-2.5 py-1 text-[11px] text-ink-secondary">
-              <UserCheck className="h-3 w-3 text-accent-blue" aria-hidden="true" />
-              <span className="text-ink-tertiary">As:</span>
+            <Surface variant="secondary" className="flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1">
+              <UserCheck className="h-3 w-3 text-accent" aria-hidden="true" />
+              <Typography type="body-xs" color="muted">As:</Typography>
               <div className="flex items-center gap-1">
                 {props.availableHandles.map((h) => (
-                  <button
+                  <Button
                     key={h}
-                    type="button"
+                    size="sm"
+                    variant={props.userHandle === h ? "primary" : "ghost"}
                     onClick={() => props.onSwitchPersona?.(h)}
-                    className={`font-mono px-1.5 py-0.5 rounded transition-colors ${
-                      props.userHandle === h
-                        ? "bg-segmented-active text-ink-primary font-semibold shadow-xs"
-                        : "hover:text-ink-primary"
-                    }`}
+                    className="h-6 px-2 text-[11px] font-mono rounded"
                   >
                     @{h}
-                  </button>
+                  </Button>
                 ))}
               </div>
-            </div>
+            </Surface>
           )}
         </div>
       </div>

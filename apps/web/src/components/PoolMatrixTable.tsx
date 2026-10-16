@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, ProgressBar, Table } from "@heroui/react";
+import { Button, ProgressBar, Surface, Table, Typography } from "@heroui/react";
 import type { PoolMatrixTableProps } from "@volt/types";
 import { Download, Scale, Sliders, TrendingUp, Users } from "lucide-react";
 
@@ -11,66 +11,76 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
     <section className="space-y-6">
       {/* 3-Column Bento Metric Tiles */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card className="apple-surface rounded-[20px] p-5 sm:p-6">
-          <div className="flex items-center justify-between text-[12px] text-ink-secondary">
-            <span>Active Sprint Cycle</span>
-            <Scale className="h-4 w-4 text-ink-tertiary" aria-hidden="true" />
+        <Surface variant="default" className="rounded-2xl border border-border p-5 sm:p-6">
+          <div className="flex items-center justify-between text-xs">
+            <Typography type="body-xs" color="muted">Active Sprint Cycle</Typography>
+            <Scale className="h-4 w-4 text-muted" aria-hidden="true" />
           </div>
-          <p className="mt-2 text-[17px] font-semibold tracking-[-0.02em] text-ink-primary">{summary.cycleName}</p>
-          <p className="mt-1 font-mono text-[11px] tabular-nums text-ink-tertiary">{summary.startDate} — {summary.endDate}</p>
-        </Card>
+          <Typography type="h3" className="mt-2 font-semibold tracking-tight text-foreground">
+            {summary.cycleName}
+          </Typography>
+          <Typography type="body-xs" color="muted" className="mt-1 font-mono tabular-nums">
+            {summary.startDate} — {summary.endDate}
+          </Typography>
+        </Surface>
 
-        <Card className="apple-surface rounded-[20px] p-5 sm:p-6">
-          <div className="flex items-center justify-between text-[12px] text-ink-secondary">
-            <span>Total Team Weighted Output</span>
-            <TrendingUp className="h-4 w-4 text-accent-emerald" aria-hidden="true" />
+        <Surface variant="default" className="rounded-2xl border border-border p-5 sm:p-6">
+          <div className="flex items-center justify-between text-xs">
+            <Typography type="body-xs" color="muted">Total Team Weighted Output</Typography>
+            <TrendingUp className="h-4 w-4 text-success" aria-hidden="true" />
           </div>
-          <p className="mt-2 font-mono text-[26px] font-semibold tracking-[-0.035em] tabular-nums text-ink-primary">
-            {summary.totalTeamPoints.toFixed(2)}
-            <span className="ml-1 font-sans text-[12px] font-normal text-ink-tertiary">pts</span>
-          </p>
-          <p className="mt-0.5 text-[11px] text-ink-tertiary">Across {summary.activeContributorCount} active contributors</p>
-        </Card>
+          <div className="mt-2 flex items-baseline gap-1">
+            <Typography type="h2" className="font-mono font-semibold tabular-nums text-foreground">
+              {summary.totalTeamPoints.toFixed(2)}
+            </Typography>
+            <Typography type="body-xs" color="muted">pts</Typography>
+          </div>
+          <Typography type="body-xs" color="muted" className="mt-0.5">
+            Across {summary.activeContributorCount} active contributors
+          </Typography>
+        </Surface>
 
-        <Card className="apple-surface rounded-[20px] p-5 sm:p-6">
-          <div className="flex items-center justify-between text-[12px] text-ink-secondary">
-            <span>Bonus Pool Allocation</span>
-            <Users className="h-4 w-4 text-accent-blue" aria-hidden="true" />
+        <Surface variant="default" className="rounded-2xl border border-border p-5 sm:p-6">
+          <div className="flex items-center justify-between text-xs">
+            <Typography type="body-xs" color="muted">Bonus Pool Allocation</Typography>
+            <Users className="h-4 w-4 text-accent" aria-hidden="true" />
           </div>
           <div className="mt-2 flex items-baseline justify-between gap-2">
-            <p className="font-mono text-[26px] font-semibold tracking-[-0.035em] tabular-nums text-ink-primary">
+            <Typography type="h2" className="font-mono font-semibold tabular-nums text-foreground">
               {summary.currency} {props.poolBudget.toLocaleString()}
-            </p>
+            </Typography>
             {props.canManageCycles && (
               <Button
                 size="sm"
-                variant="ghost"
+                variant="outline"
                 onClick={props.onExportCsv}
-                className="apple-pill flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium"
+                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs"
               >
                 <Download className="h-3 w-3" aria-hidden="true" />
-                <span>Export CSV</span>
+                <Typography type="body-xs">Export CSV</Typography>
               </Button>
             )}
           </div>
-          <p className="mt-0.5 text-[11px] text-ink-tertiary">Proportional to verified cycle weightage</p>
-        </Card>
+          <Typography type="body-xs" color="muted" className="mt-0.5">
+            Proportional to verified cycle weightage
+          </Typography>
+        </Surface>
       </div>
 
       {/* Interactive What-If Pool Simulator */}
       {props.canManageCycles && (
-        <Card className="apple-surface rounded-[20px] p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <Surface variant="default" className="rounded-2xl border border-border p-5 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-blue-bg text-accent-blue">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-secondary border border-border text-accent">
               <Sliders className="h-4 w-4" aria-hidden="true" />
             </div>
             <div>
-              <h3 className="text-[13px] font-semibold text-ink-primary">What-If Pool Budget Simulator</h3>
-              <p className="text-[11px] text-ink-tertiary">Adjust sprint budget to simulate real-time compensation payouts</p>
+              <Typography type="body-sm" className="font-semibold text-foreground">What-If Pool Budget Simulator</Typography>
+              <Typography type="body-xs" color="muted">Adjust sprint budget to simulate real-time compensation payouts</Typography>
             </div>
           </div>
           <div className="flex items-center gap-3 w-full md:w-80">
-            <span className="font-mono text-[11px] text-ink-tertiary">$10k</span>
+            <Typography type="code" className="text-[11px]">$10k</Typography>
             <input
               type="range"
               min={10000}
@@ -78,28 +88,28 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
               step={5000}
               value={props.poolBudget}
               onChange={(e) => props.onChangePoolBudget(Number(e.target.value))}
-              className="w-full accent-accent-blue"
+              className="w-full"
             />
-            <span className="font-mono text-[11px] text-ink-tertiary">$100k</span>
+            <Typography type="code" className="text-[11px]">$100k</Typography>
           </div>
-        </Card>
+        </Surface>
       )}
 
       {/* Dynamic Bonus Pool Share Table */}
-      <Card className="apple-surface overflow-hidden rounded-[20px]">
-        <div className="border-b border-border-subtle px-6 py-5">
-          <h2 className="text-[15px] font-semibold tracking-[-0.018em] text-ink-primary">
+      <Surface variant="default" className="overflow-hidden rounded-2xl border border-border">
+        <div className="border-b border-border px-6 py-5">
+          <Typography type="h3" className="font-semibold tracking-tight text-foreground">
             Dynamic Bonus Pool Share &amp; Domain Leverage Matrix
-          </h2>
-          <p className="mt-0.5 text-[12px] text-ink-secondary">
+          </Typography>
+          <Typography type="body-sm" color="muted" className="mt-0.5">
             1–3 verified participants receive 100% point duplication; 4+ switch to 3/N split mode.
-          </p>
+          </Typography>
         </div>
 
         <Table>
           <Table.ScrollContainer>
-            <Table.Content aria-label="Dynamic Bonus Pool Share Matrix" className="w-full text-left text-[12px]">
-              <Table.Header className="border-b border-border-subtle bg-control text-[11px] font-medium text-ink-secondary">
+            <Table.Content aria-label="Dynamic Bonus Pool Share Matrix" className="w-full text-left text-xs">
+              <Table.Header className="border-b border-border bg-surface-secondary text-[11px] font-medium">
                 <Table.Column isRowHeader className="px-6 py-3 font-medium">Contributor</Table.Column>
                 <Table.Column className="px-6 py-3 font-medium">Deliverables</Table.Column>
                 <Table.Column className="px-6 py-3 font-medium">Collab Ratio</Table.Column>
@@ -110,40 +120,44 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
                   <Table.Column className="px-6 py-3 text-right font-medium">Simulated Payout</Table.Column>
                 )}
               </Table.Header>
-              <Table.Body className="divide-y divide-border-subtle">
+              <Table.Body className="divide-y divide-border">
                 {summary.leaderboard.map((row) => (
-                  <Table.Row key={row.userId} className="transition-colors duration-150 hover:bg-control">
+                  <Table.Row key={row.userId} className="transition-colors hover:bg-surface-secondary">
                     <Table.Cell className="px-6 py-4">
-                      <div className="font-medium text-ink-primary">{row.fullName}</div>
-                      <div className="font-mono text-[11px] text-ink-tertiary">@{row.handle}</div>
+                      <Typography type="body-sm" className="font-medium">{row.fullName}</Typography>
+                      <Typography type="body-xs" color="muted" className="font-mono">@{row.handle}</Typography>
                     </Table.Cell>
-                    <Table.Cell className="px-6 py-4 font-mono tabular-nums text-ink-secondary">
-                      {row.approvedCommitsCount}
+                    <Table.Cell className="px-6 py-4 font-mono tabular-nums">
+                      <Typography type="body-sm">{row.approvedCommitsCount}</Typography>
                     </Table.Cell>
-                    <Table.Cell className="px-6 py-4 font-mono tabular-nums text-accent-blue font-medium">
-                      {row.collaborationRatioPercent.toFixed(0)}%
+                    <Table.Cell className="px-6 py-4 font-mono tabular-nums text-accent font-medium">
+                      <Typography type="body-sm" className="text-accent">{row.collaborationRatioPercent.toFixed(0)}%</Typography>
                     </Table.Cell>
-                    <Table.Cell className="px-6 py-4 font-mono text-[11px] tabular-nums text-ink-secondary">
-                      eng {row.domainBreakdown.engineering} · res {row.domainBreakdown.research} · ops {row.domainBreakdown.ops}
+                    <Table.Cell className="px-6 py-4 font-mono text-[11px] tabular-nums">
+                      <Typography type="body-xs" color="muted">
+                        eng {row.domainBreakdown.engineering} · res {row.domainBreakdown.research} · ops {row.domainBreakdown.ops}
+                      </Typography>
                     </Table.Cell>
-                    <Table.Cell className="px-6 py-4 text-right font-mono font-semibold tabular-nums text-accent-emerald">
-                      {row.totalCyclePoints.toFixed(2)}
+                    <Table.Cell className="px-6 py-4 text-right font-mono font-semibold tabular-nums text-success">
+                      <Typography type="body-sm" className="text-success font-semibold">{row.totalCyclePoints.toFixed(2)}</Typography>
                     </Table.Cell>
                     <Table.Cell className="px-6 py-4 text-right">
                       <div className="inline-flex items-center gap-2">
                         <ProgressBar aria-label="Pool share" className="w-16" value={Math.min(100, row.poolSharePercent)}>
-                          <ProgressBar.Track className="h-1.5 rounded-full bg-control">
-                            <ProgressBar.Fill className="rounded-full bg-ink-primary" />
+                          <ProgressBar.Track className="h-1.5 rounded-full bg-surface-secondary">
+                            <ProgressBar.Fill className="rounded-full bg-foreground" />
                           </ProgressBar.Track>
                         </ProgressBar>
-                        <span className="font-mono font-medium tabular-nums text-ink-primary">
+                        <Typography type="body-sm" className="font-mono font-medium tabular-nums">
                           {row.poolSharePercent.toFixed(1)}%
-                        </span>
+                        </Typography>
                       </div>
                     </Table.Cell>
                     {props.poolBudget > 0 && (
-                      <Table.Cell className="px-6 py-4 text-right font-mono font-semibold tabular-nums text-ink-primary">
-                        {summary.currency} {row.cyclePayout.toLocaleString()}
+                      <Table.Cell className="px-6 py-4 text-right font-mono font-semibold tabular-nums">
+                        <Typography type="body-sm" className="font-semibold">
+                          {summary.currency} {row.cyclePayout.toLocaleString()}
+                        </Typography>
                       </Table.Cell>
                     )}
                   </Table.Row>
@@ -152,7 +166,7 @@ export function PoolMatrixTable(props: PoolMatrixTableProps) {
             </Table.Content>
           </Table.ScrollContainer>
         </Table>
-      </Card>
+      </Surface>
     </section>
   );
 }
