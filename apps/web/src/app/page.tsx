@@ -1,5 +1,6 @@
 "use client";
 
+import { Input } from "@heroui/react";
 import { WORK_DOMAINS, type CommitStatus } from "@volt/types";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -86,8 +87,8 @@ export default function ImpactStreamPage() {
               <div className="flex items-center gap-2">
                 <div className="apple-pill flex items-center gap-1.5 rounded-full px-3 py-1">
                   <Search className="h-3 w-3 text-ink-tertiary" aria-hidden="true" />
-                  <input
-                    type="text"
+                  <Input
+                    aria-label="Search deliverables"
                     value={state.filter.searchQuery}
                     onChange={(e) =>
                       state.setFilter((f) => ({ ...f, searchQuery: e.target.value }))

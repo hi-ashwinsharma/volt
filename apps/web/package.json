@@ -10,6 +10,9 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@heroui/react": "^3.2.6",
+    "@heroui/styles": "^3.2.6",
+    "@tailwindcss/postcss": "^4.3.3",
     "@volt/config": "workspace:*",
     "@volt/math": "workspace:*",
     "@volt/policy": "workspace:*",
@@ -17,7 +20,8 @@
     "lucide-react": "^0.474.0",
     "next": "^15.1.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tailwind-variants": "^3.3.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
@@ -25,7 +29,7 @@
     "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.7.3"
   }
 }

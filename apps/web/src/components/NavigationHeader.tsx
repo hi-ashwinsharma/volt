@@ -1,5 +1,6 @@
 "use client";
 
+import { Button, Chip, Kbd } from "@heroui/react";
 import { AppRoutes, type NavigationHeaderProps } from "@volt/types";
 import {
   Activity,
@@ -87,10 +88,9 @@ export function NavigationHeader(props: NavigationHeaderProps) {
                   <Icon className="h-3.5 w-3.5 opacity-80" aria-hidden="true" />
                   <span>{item.label}</span>
                   {item.badge !== undefined && item.badge > 0 && (
-                    <span className="ml-0.5 flex items-center gap-1 rounded-full bg-accent-amber-bg px-1.5 py-0.2 font-mono text-[10px] font-semibold tabular-nums text-accent-amber">
-                      <span className="h-1.5 w-1.5 rounded-full bg-status-warn" />
-                      <span>{item.badge}</span>
-                    </span>
+                    <Chip color="warning" size="sm" variant="soft" className="ml-0.5 h-4 px-1 text-[10px]">
+                      <Chip.Label>{item.badge}</Chip.Label>
+                    </Chip>
                   )}
                 </Link>
               );
@@ -99,30 +99,35 @@ export function NavigationHeader(props: NavigationHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <button
-            type="button"
+          <Button
+            size="sm"
+            variant="ghost"
             onClick={props.onOpenCommandPalette}
-            className="apple-pill flex items-center gap-2 rounded-full px-3 py-1 text-[12px] font-medium active:scale-[0.97]"
+            className="apple-pill flex items-center gap-2 rounded-full px-3 py-1 text-[12px] font-medium"
             aria-label="Open Command Palette"
           >
             <Command className="h-3 w-3 opacity-75" aria-hidden="true" />
             <span className="hidden sm:inline">Command</span>
-            <kbd className="font-mono text-[10px] text-ink-tertiary">⌘K</kbd>
-          </button>
+            <Kbd className="text-[10px]">
+              <Kbd.Abbr keyValue="command" />
+              <Kbd.Content>K</Kbd.Content>
+            </Kbd>
+          </Button>
 
-          <button
-            type="button"
+          <Button
+            size="sm"
+            variant="ghost"
+            isIconOnly
             onClick={props.onToggleTheme}
-            className="apple-pill flex h-7 w-7 items-center justify-center rounded-full active:scale-95"
-            aria-label="Toggle theme appearance"
-            title={props.theme === "dark" ? "Switch to Apple Light Mode" : "Switch to macOS Dark Mode"}
+            className="apple-pill flex h-7 w-7 items-center justify-center rounded-full"
+            aria-label={props.theme === "dark" ? "Switch to Apple Light Mode" : "Switch to macOS Dark Mode"}
           >
             {props.theme === "dark" ? (
               <Sun className="h-3.5 w-3.5" aria-hidden="true" />
             ) : (
               <Moon className="h-3.5 w-3.5" aria-hidden="true" />
             )}
-          </button>
+          </Button>
 
           {/* Interactive Persona Switcher */}
           {props.availableHandles && props.availableHandles.length > 0 && (
