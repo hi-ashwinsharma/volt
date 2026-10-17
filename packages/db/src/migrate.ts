@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { closeDbConnection, getSqlClient } from "./client";
 
@@ -6,12 +6,13 @@ export async function runDatabaseMigrations(
   connectionString?: string
 ): Promise<void> {
   const sql = getSqlClient(connectionString);
-  const migrationPath = join(
-    import.meta.dir,
-    "../migrations/0000_initial_volt_schema.sql"
-  );
-  const ddl = readFileSync(migrationPath, "utf-8");
-  await sql.unsafe(ddl);
+  const migrationsDir = join(import.meta.dir, "../migrations");
+  const files = readdirSync(migrationsDir)
+    .filter((name) => name.endsWith(".sql"))
+    .sort();
+  for (const file of files) {
+    await sql.unsafe(readFileSync(join(migrationsDir, file), "utf-8"));
+  }
 }
 
 if (import.meta.main) {

@@ -1,51 +1,37 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
 import {
   authenticateByApiKey,
-  findOrCreateUserBySupabaseAuth,
+  findOrCreateUserByExternalIdentity,
   resolveUserPolicyContextById,
 } from "@volt/db";
 import { evaluateScopeAccess } from "@volt/policy";
 import type { PermissionScope, UserPolicyContext } from "@volt/types";
 import type { FastifyReply, FastifyRequest } from "fastify";
+import { verifyFirebaseIdToken } from "../services/firebase-auth.service";
 import {
   cacheUserPolicyContext,
   getCachedUserPolicyContext,
 } from "../services/redis.service";
 
-function verifySupabaseJwt(token: string): {
-  readonly sub: string;
-  readonly email: string;
-} | null {
-  const parts = token.split(".");
-  if (parts.length !== 3 || !parts[0] || !parts[1] || !parts[2]) {
+async function resolveDevHeaderUser(
+  req: FastifyRequest
+): Promise<UserPolicyContext | null> {
+  // Local-only impersonation shortcut; ignored in every other environment.
+  if (process.env["NODE_ENV"] !== "development") {
     return null;
   }
-  const secret = process.env["SUPABASE_JWT_SECRET"];
-  if (secret && !secret.includes("your-supabase-jwt-secret")) {
-    const signingInput = `${parts[0]}.${parts[1]}`;
-    const expectedSig = createHmac("sha256", secret)
-      .update(signingInput)
-      .digest("base64url");
-    const bufA = Buffer.from(expectedSig);
-    const bufB = Buffer.from(parts[2]);
-    if (bufA.length !== bufB.length || !timingSafeEqual(bufA, bufB)) {
-      return null;
-    }
-  }
-  try {
-    const payload = JSON.parse(
-      Buffer.from(parts[1], "base64url").toString("utf-8")
-    ) as { sub?: string; email?: string; exp?: number };
-    if (payload.exp && Date.now() / 1000 > payload.exp) {
-      return null;
-    }
-    if (!payload.sub || !payload.email) {
-      return null;
-    }
-    return { sub: payload.sub, email: payload.email };
-  } catch {
+  const devUserId = req.headers["x-volt-user-id"];
+  if (typeof devUserId !== "string" || devUserId.length === 0) {
     return null;
   }
+  const cached = await getCachedUserPolicyContext(devUserId);
+  if (cached) {
+    return cached;
+  }
+  const resolved = await resolveUserPolicyContextById(devUserId);
+  if (resolved) {
+    await cacheUserPolicyContext(resolved);
+  }
+  return resolved;
 }
 
 export async function resolveRequestUser(
@@ -53,19 +39,7 @@ export async function resolveRequestUser(
 ): Promise<UserPolicyContext | null> {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    const devUserId = req.headers["x-volt-user-id"];
-    if (typeof devUserId === "string" && devUserId.length > 0) {
-      const cached = await getCachedUserPolicyContext(devUserId);
-      if (cached) {
-        return cached;
-      }
-      const resolved = await resolveUserPolicyContextById(devUserId);
-      if (resolved) {
-        await cacheUserPolicyContext(resolved);
-      }
-      return resolved;
-    }
-    return null;
+    return resolveDevHeaderUser(req);
   }
 
   const token = authHeader.slice("Bearer ".length).trim();
@@ -77,16 +51,15 @@ export async function resolveRequestUser(
     return ctx;
   }
 
-  const jwtClaims = verifySupabaseJwt(token);
-  if (!jwtClaims) {
+  const identity = await verifyFirebaseIdToken(token);
+  if (!identity) {
     return null;
   }
 
-  const ctx = await findOrCreateUserBySupabaseAuth({
-    supabaseAuthId: jwtClaims.sub,
-    email: jwtClaims.email,
-  });
-  await cacheUserPolicyContext(ctx);
+  const ctx = await findOrCreateUserByExternalIdentity(identity);
+  if (ctx) {
+    await cacheUserPolicyContext(ctx);
+  }
   return ctx;
 }
 
@@ -99,7 +72,7 @@ export async function requireAuthenticatedUser(
     await reply.status(401).send({
       error: "UNAUTHORIZED",
       message:
-        "Valid Bearer volt_sk_... Personal API Key or Supabase Auth JWT required.",
+        "Valid Bearer volt_sk_... Personal API Key or Firebase ID token required.",
     });
     return null;
   }

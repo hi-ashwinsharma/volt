@@ -1,5 +1,6 @@
 import type { ApiRequestOptions } from "@volt/types";
 
+import { readFirebaseIdToken } from "./firebase-client";
 import { readStoredApiKey } from "./session-storage";
 
 export const API_BASE_URL = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:8080";
@@ -24,6 +25,14 @@ function buildHeaders(hasBody: boolean, apiKey: string | null): Headers {
   return headers;
 }
 
+/** Firebase ID token when signed in with Firebase, otherwise the stored personal API key. */
+async function resolveBearer(override?: string): Promise<string | null> {
+  if (override) {
+    return override;
+  }
+  return (await readFirebaseIdToken()) ?? readStoredApiKey();
+}
+
 async function readErrorMessage(res: Response): Promise<string> {
   try {
     const payload = (await res.json()) as { message?: string; error?: string };
@@ -38,7 +47,7 @@ export async function apiRequest<T>(
   options: ApiRequestOptions = {},
   apiKeyOverride?: string,
 ): Promise<T> {
-  const apiKey = apiKeyOverride ?? readStoredApiKey();
+  const apiKey = await resolveBearer(apiKeyOverride);
   const res = await fetch(`${API_BASE_URL}${path}`, {
     method: options.method ?? "GET",
     headers: buildHeaders(options.body !== undefined, apiKey),
@@ -55,7 +64,7 @@ export async function apiRequest<T>(
 
 export async function apiDownload(path: string, filename: string): Promise<void> {
   const res = await fetch(`${API_BASE_URL}${path}`, {
-    headers: buildHeaders(false, readStoredApiKey()),
+    headers: buildHeaders(false, await resolveBearer()),
   });
   if (!res.ok) {
     throw new ApiError(res.status, await readErrorMessage(res));

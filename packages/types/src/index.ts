@@ -10,3 +10,4 @@ export * from "./ui.types";
 export * from "./ui-props.types";
 export * from "./ui-feature-props.types";
 export * from "./tauri.types";
+export * from "./auth.types";
