@@ -16,11 +16,13 @@ export async function verifyFirebaseIdToken(
 ): Promise<VerifiedExternalIdentity | null> {
   const projectId = process.env["FIREBASE_PROJECT_ID"];
   if (!projectId) {
+    console.warn("[WARN] FIREBASE_PROJECT_ID is not set; Firebase ID tokens are rejected.");
     return null;
   }
   try {
     const decoded = await getAuth(getFirebaseApp(projectId)).verifyIdToken(token);
     if (!decoded.email || decoded.email_verified !== true) {
+      console.warn("[WARN] Firebase ID token rejected: email missing or not verified.");
       return null;
     }
     const name = typeof decoded["name"] === "string" ? decoded["name"] : undefined;
@@ -29,7 +31,9 @@ export async function verifyFirebaseIdToken(
       email: decoded.email.toLowerCase(),
       ...(name ? { fullName: name } : {}),
     };
-  } catch {
+  } catch (err) {
+    const code = (err as { code?: string }).code ?? (err as Error).message;
+    console.warn(`[WARN] Firebase ID token rejected: ${code}`);
     return null;
   }
 }
