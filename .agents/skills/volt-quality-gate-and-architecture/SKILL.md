@@ -29,7 +29,7 @@ The script [`scripts/quality-gate.ts`](../../../scripts/quality-gate.ts) enforce
 2. **`[CENTRALIZED-TYPES]`**: Zero `interface` or `type` declarations outside `packages/types/src/`.
    - **How to fix**: Move all component `*Props` interfaces, state types, and helper return types into `packages/types/src/ui.types.ts` (or the appropriate module in `packages/types/src/`) and import them via `import type { ... } from "@volt/types"`.
 3. **`[ZERO-ESCAPE-TYPES]`**: Zero occurrences of `any` or `unknown` on code lines (note: avoid writing the English words `any` or `unknown` even inside string literals on code lines, as the regex checks `\b(?:any|unknown)\b`).
-4. **`[NO-EMOJIS]`**: Zero Unicode emojis anywhere in source code. Always use `lucide-react` icons or ASCII symbols.
+4. **`[NO-EMOJIS]`**: Zero Unicode emojis anywhere in source code. Always use `@gravity-ui/icons` or ASCII symbols.
 
 ---
 

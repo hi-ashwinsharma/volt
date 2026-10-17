@@ -51,7 +51,7 @@ export async function registerHealthAndAuthRoutes(
     return reply.send(response);
   });
 
-  app.get("/v1/auth/status-overview", async (req, reply) => {
+  app.get(ApiRoutes.auth.statusOverview, async (req, reply) => {
     const user = await requireUserScope(req, reply, "feed:read");
     if (!user) {
       return;

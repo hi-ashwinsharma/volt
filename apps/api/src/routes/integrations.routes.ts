@@ -66,7 +66,7 @@ export async function registerIntegrationsAndArtifactsRoutes(
 
     const webUrl = process.env["WEB_PUBLIC_URL"] ?? "http://localhost:3000";
     return reply.redirect(
-      `${webUrl}${AppRoutes.settingsIntegrations}?github=connected`
+      `${webUrl}${AppRoutes.adminIntegrations}?github=connected`
     );
   });
 

@@ -1,92 +1,53 @@
-# 08 — Apple-Esque Web Command Center & Mac Overlay Specification
+# 08 — Web Command Center: HeroUI v3 Design System & Information Architecture
 
-**Document ID:** `VOLT-DOC-08`  
-**Parent Index:** [00-index.md](file:///Users/ashwinsharma/coldcrunch/volt/docs/00-index.md)
-
----
-
-## 1. Visual Language & Design Tokens
-
-The `volt` Web Command Center (`apps/web`) and Tauri Mac Quick-Entry Overlay (`apps/mac-overlay`) share a cohesive **macOS Sequoia / Linear** dark-first glassmorphic design language.
-
-### 1.1 Color & Surface Tokens
-* **Canvas Background:** `#09090B` (Zinc 950 deep obsidian)
-* **Elevated Glass Surface:** `rgba(24, 24, 27, 0.72)` with `backdrop-filter: blur(24px) saturate(180%)`
-* **Hairline Specular Border:** `1px solid rgba(255, 255, 255, 0.07)` (hover state: `rgba(255, 255, 255, 0.14)`)
-* **Primary Typography:** `#FAFAFA` (Inter Variable / SF Pro Display, tight tracking `-0.015em`)
-* **Secondary / Muted Typography:** `#A1A1AA` (Zinc 400)
-* **Monospace Equations & Hashes:** `JetBrains Mono` (`font-variant-numeric: tabular-nums`)
-* **Semantic Accents:**
-  * **Output Commit Badge:** Emerald `#10B981` (`rgba(16, 185, 129, 0.12)` background fill)
-  * **Insight Commit Badge:** Indigo/Violet `#8B5CF6` (`rgba(139, 92, 246, 0.12)` background fill)
-  * **High-Stakes Peer Review (`>15 pts`):** Amber `#F59E0B`
-  * **Verified Artifact (`1.2x`):** Cyan `#06B6D4`
-
-### 1.2 Strict Zero-Emoji Policy (Native Vector Icons Only)
-Per our global user rule, **Unicode emojis are strictly prohibited** across all UI components, buttons, badges, empty states, and CLI outputs.
-* All visual indicators use crisp `1.5px`-stroke vector icons from `lucide-react` (`GitCommitHorizontal`, `GitPullRequest`, `FlaskConical`, `ShieldCheck`, `Sparkles`, `FileCode2`, `Scale`, `Users`, `Terminal`, `ArrowUpRight`) paired with accessible `aria-label` attributes.
+**Document ID:** `VOLT-DOC-08`
+**Parent Index:** [00-index.md](./00-index.md)
 
 ---
 
-## 2. Core Views & Component Architecture (`apps/web`)
+## 1. Design System: Pure HeroUI v3
 
-Every view in `apps/web` is decomposed into focused presentation components (`<200 lines` per file) backed by dedicated custom hooks (`useImpactStream`, `useStageCommit`, `usePeerReviewQueue`, `usePoolShareMatrix`, `useGitHubIntegration`).
+`apps/web` was generated with `heroui init` (Next.js App Router template) and uses only HeroUI v3 (`@heroui/react`, `@heroui/styles`) on Tailwind CSS v4. There is no other component library and no custom design language.
 
-### 2.1 Persistent Top Quick-Capture & Commit Bar
-* Spotlight-inspired bar docked at the top of the workspace:
-  * **Mode Toggle:** Switch between `Stage Log` (`volt add`) and `Commit Deliverable` (`volt commit`).
-  * **Artifact Attachment Pill:**
-    * Pick a recent PR from connected GitHub repositories (powered by the installed GitHub App), OR
-    * Drag-and-drop / select a proof file (`.ipynb`, `.pdf`, `.xlsx`, `.png`) with live upload progress bar.
-  * **Co-Author Tagging Autocomplete:** Type `@` to select team members.
-  * **Staging Drawer Badge:** Expandable drawer showing current uncommitted micro-logs with timestamps and source badges (`CLI`, `MCP`, `Overlay`, `Telegram`).
+| Concern | Source of truth |
+| :--- | :--- |
+| Components | HeroUI compound components (`Card.Header`, `Table.Row`, `Modal.Dialog`, ...). Next.js links reuse HeroUI styles via `buttonVariants` from `@heroui/styles`. |
+| Theme | `apps/web/styles/theme.css`: the HeroUI Theme Builder **Uber** preset (monochrome; black accent in light mode, white in dark; 4px radius). |
+| Tokens | HeroUI semantic utilities only: `bg-background`, `bg-surface`, `text-muted`, `bg-accent`, `border-separator`, `text-success`, `rounded-lg`, ... No hex/oklch literals or arbitrary values in components. |
+| Color mode | `next-themes`, `attribute="class"`, `defaultTheme="system"`; user override in the sidebar appearance menu. |
+| Icons | `@gravity-ui/icons` (the set HeroUI's docs use). |
+| Typography | Inter + Fira Code via `next/font`; HeroUI `Typography` primitives for headings. |
+| Density | HeroUI defaults. Fields placed on cards/modals use `variant="secondary"` as HeroUI documents for on-surface use; dense data uses `Table` and `size="sm"` chips/buttons. |
 
-### 2.2 View 1: Live Impact Stream (`AppRoutes.home`)
-* Real-time chronological ledger of team commits with filter pills by Domain (`All`, `Engineering`, `Research`, `Ops`, `Finance`, `Pitch`) and Status (`Approved`, `Pending Peer`, `Pending Co-Author`).
-* **Commit Card Anatomy:**
-  * **Header:** Monospace hash pill (`a9f3c12b`), author + verified co-author avatars (with tooltip showing each co-author's verified `contribution_note`), Domain badge, and `OUTPUT` vs. `INSIGHT` pill.
-  * **Interactive Math Equation Pill:**
-    $$\texttt{C:8 (18.38) × I:2.0x × E:1.2x × V:1.00 × D:1.00 = 44.11 pts}$$
-    Clicking expands the full **Append-Only Score Audit Trail** showing the AI Judge's reasoning and any subsequent Peer Reviewer adjustments.
-  * **Artifact Verification Chip:**
-    * For `github_app`: Displays `GitPullRequest` icon, repo/PR number, `+additions / -deletions`, `Merged` badge, and `CI Passed` indicator.
-    * For `file_upload`: Displays `FileCode2` / `FileText` icon, filename, size, and one-click preview modal.
+### 1.1 Semantic color meaning
 
-### 2.3 View 2: Peer Review & Handshake Queue (`AppRoutes.peerReviews`)
-Split into two high-priority action sections:
-1. **My Pending Co-Author Handshakes:**
-   * Lists commits where the current user was tagged via `--co @handle` along with a live countdown to the 24-hour deadline.
-   * 1-line input field (`"Describe your specific contribution..."`) + **Verify & Unlock** button or **Reject Tag** button.
-2. **High-Stakes Peer Review Queue ($>15.0\text{ pts}$ or Flagged):**
-   * Visible and actionable to users holding the `commit:review_peer` scope (automatically excluding commits where the user is the author or co-author).
-   * Interactive precision slider for $V \in [0.70, 1.30]$ that recalculates $W_c$ in real time, optional discrete selectors to override $C, I, E$, mandatory audit reasoning input, and **Approve Score** / **Reject Commit** actions.
+Neutral by default; color carries meaning only:
 
-### 2.4 View 3: Dynamic Pool Share & Analytics Matrix (`AppRoutes.poolMatrix`)
-* **Cycle Selector Header:** Switch between the active `billing_cycle`, past cycles, Monthly, Weekly, or Custom Date Range. Users with `cycle:manage` can update $\text{PoolBudget}_T$ or create a new cycle inline.
-* **Real-Time Pool Share Ticker & Leaderboard Table:**
-  * Displays each team member's Approved Commits count, Total Cycle Points ($P_{u, T}$), Collaboration Ratio, Domain Breakdown bar (`Engineering` / `Research` / `Ops` / `Finance` / `Pitch`), **Dynamic Pool Share ($\text{Share}_{u, T}\%$)**, and calculated **Cycle Payout ($\text{Payout}_{u, T}$)** when $\text{PoolBudget}_T > 0$.
-  * One-click **Export Compensation Ledger (CSV)** for payroll execution.
-
-### 2.5 View 4: Integrations & Policy Management (`AppRoutes.settingsIntegrations` & `AppRoutes.settingsPolicies`)
-* **"Connect GitHub" Card:** Prominent one-click button to install/link the `volt` GitHub App, displaying connected GitHub accounts/organizations, accessible repositories, and installation health.
-* **Personal API Keys Manager:** Generate and revoke `volt_sk_...` keys for CLI, MCP, and Mac Overlay.
-* **PBAC Policy Console (`commit:policy_admin`):** Manage reusable Policy Groups (`Core Contributor`, `Peer Reviewer`, `Pool Manager`, custom groups) and assign scopes to team members without touching code.
-
-### 2.6 Global `Cmd + K` Command Palette
-Accessible from anywhere in the Web UI to:
-* Stage a quick micro-log
-* Commit staged logs
-* Jump to pending peer reviews or co-author handshakes
-* Connect GitHub or generate an API key
-* Export the active cycle's compensation report
+* `success`: approved, verified, positive payout.
+* `warning`: needs a human (peer review, co-author confirmation).
+* `danger`: destructive actions, rejections, anti-gaming flags.
+* `accent`: the primary action on a view and focus rings.
 
 ---
 
-## 3. Ambient Mac Quick-Entry Overlay (`apps/mac-overlay`)
+## 2. Information Architecture
 
-Built with **Tauri v2** (`Rust` core + lightweight `React/Tailwind` frontend):
-1. Registers global macOS shortcut `Cmd + Shift + L` via `tauri-plugin-global-shortcut`.
-2. Summons a frameless, transparent, vibrancy-blurred floating Spotlight bar centered in the upper third of the active screen (`NSPanel` behavior, appears over full-screen apps without stealing desktop spaces).
-3. **Instant Capture Flow:**
-   * Type log text $\rightarrow$ press `Enter` $\rightarrow$ writes directly to `~/.volt/queue.sqlite` in `<5ms`, hides the overlay window immediately, and triggers the background sync flush.
-   * Press `Tab` inside the overlay to switch to quick `Commit` mode or drag-and-drop a screenshot file directly onto the pill.
+Navigation is grouped by job, and each item is shown only when the user holds the PBAC scope it needs (see [04](./04-pbac-and-security.md)).
+
+| Group | Page | Route | Scope |
+| :--- | :--- | :--- | :--- |
+| Personal | Home: stats, staging buffer, commit dialog, open requests | `/` | any |
+| Personal | My work | `/work` | `commit:create` |
+| Personal | Co-author requests | `/handshakes` | `commit:verify_coauthor` |
+| Team | Ledger (all deliverables, filters) | `/ledger` | `feed:read` |
+| Team | Deliverable detail: score factors, bundled work, audit trail | `/commits/:shortHash` | `feed:read` |
+| Governance | Review queue and review workbench (conflict-of-interest guard) | `/reviews`, `/reviews/:shortHash` | `commit:review_peer` |
+| Compensation | Cycles: pool stats, share table, export, new cycle | `/cycles` | `cycle:read` / `cycle:manage` |
+| Admin | Members, Policies, Integrations | `/admin/*` | `user:manage`, `policy:admin`, `github:connect` |
+| Account | Settings: profile, API keys, capture clients | `/settings` | any |
+
+All routes are constants in `AppRoutes` (`@volt/types`).
+
+## 3. Authentication
+
+The web app signs in with a personal API key (`volt_sk_*`) validated against `GET /v1/auth/me`; the key is kept in browser storage. Supabase SSO is the planned replacement.

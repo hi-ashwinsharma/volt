@@ -2,6 +2,7 @@ export const ApiRoutes = {
   health: "/v1/health",
   auth: {
     me: "/v1/auth/me",
+    statusOverview: "/v1/auth/status-overview",
     apiKeys: "/v1/auth/api-keys",
     revokeApiKey: "/v1/auth/api-keys/:id",
     cliDeviceStart: "/v1/auth/cli/start",
@@ -56,16 +57,20 @@ export const ApiRoutes = {
 } as const;
 
 export const AppRoutes = {
-  home: "/",
-  login: "/login",
+  signIn: "/sign-in",
   authCliVerify: "/auth/cli",
-  peerReviews: "/reviews",
-  poolMatrix: "/pool",
+  home: "/",
+  myWork: "/work",
   commitDetail: "/commits/:shortHash",
-  settingsIntegrations: "/settings/integrations",
-  settingsApiKeys: "/settings/api-keys",
-  settingsPolicies: "/settings/policies",
-  settingsCycles: "/settings/cycles",
+  handshakes: "/handshakes",
+  ledger: "/ledger",
+  reviews: "/reviews",
+  reviewDetail: "/reviews/:shortHash",
+  cycles: "/cycles",
+  adminMembers: "/admin/members",
+  adminPolicies: "/admin/policies",
+  adminIntegrations: "/admin/integrations",
+  settings: "/settings",
 } as const;
 
 export function buildApiRoute(
