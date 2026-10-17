@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
 import { resolveEffectiveScopes } from "@volt/policy";
-import type { UserPolicyContext } from "@volt/types";
+import type { UserPolicyContext, VerifiedExternalIdentity } from "@volt/types";
 import { and, eq, isNull } from "drizzle-orm";
 import { getDb } from "../client";
 import {
@@ -91,12 +91,24 @@ export async function authenticateByApiKey(
   return resolveUserPolicyContextById(keyRow.userId);
 }
 
-export async function findOrCreateUserBySupabaseAuth(params: {
-  readonly supabaseAuthId: string;
-  readonly email: string;
-  readonly fullName?: string;
-}): Promise<UserPolicyContext> {
+/**
+ * Maps a provider-verified identity (Firebase today) to a volt user.
+ * Lookup order: provider uid, then verified email (links a pre-provisioned row once).
+ * Returns null when the email already belongs to a different provider uid.
+ */
+export async function findOrCreateUserByExternalIdentity(
+  params: VerifiedExternalIdentity
+): Promise<UserPolicyContext | null> {
   const db = getDb();
+  const [byUid] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.authProviderUid, params.providerUid))
+    .limit(1);
+  if (byUid) {
+    return resolveUserPolicyContextById(byUid.id);
+  }
+
   const [existing] = await db
     .select()
     .from(users)
@@ -104,17 +116,14 @@ export async function findOrCreateUserBySupabaseAuth(params: {
     .limit(1);
 
   if (existing) {
-    if (!existing.supabaseAuthId) {
-      await db
-        .update(users)
-        .set({ supabaseAuthId: params.supabaseAuthId, updatedAt: new Date() })
-        .where(eq(users.id, existing.id));
+    if (existing.authProviderUid && existing.authProviderUid !== params.providerUid) {
+      return null;
     }
-    const ctx = await resolveUserPolicyContextById(existing.id);
-    if (!ctx) {
-      throw new Error("Failed to resolve user policy context");
-    }
-    return ctx;
+    await db
+      .update(users)
+      .set({ authProviderUid: params.providerUid, updatedAt: new Date() })
+      .where(eq(users.id, existing.id));
+    return resolveUserPolicyContextById(existing.id);
   }
 
   const baseHandle =
@@ -126,7 +135,7 @@ export async function findOrCreateUserBySupabaseAuth(params: {
   const [created] = await db
     .insert(users)
     .values({
-      supabaseAuthId: params.supabaseAuthId,
+      authProviderUid: params.providerUid,
       handle: baseHandle,
       fullName: params.fullName ?? baseHandle,
       email: params.email,

@@ -10,11 +10,7 @@ export const EnvSchema = z.object({
   CANONICAL_TIMEZONE: z.string().min(1).default("Asia/Kolkata"),
 
   DATABASE_URL: z.string().min(1),
-  SUPABASE_URL: z.string().url().optional(),
-  SUPABASE_ANON_KEY: z.string().min(1).optional(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
-  SUPABASE_JWT_SECRET: z.string().min(16).default("volt-dev-jwt-secret-minimum-32-chars"),
-  SUPABASE_STORAGE_BUCKET: z.string().min(1).default("volt-artifacts"),
+  FIREBASE_PROJECT_ID: z.string().min(1).optional(),
 
   UPSTASH_REDIS_REST_URL: z.string().url().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),

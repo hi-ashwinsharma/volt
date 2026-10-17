@@ -86,10 +86,12 @@ export function canReviewCommit(
 
 ## 5. Dual Authentication Architecture
 
-### 5.1 Web Command Center Authentication (Supabase Auth JWT)
-* Users sign in to the Next.js 15 Web UI via **Google OAuth** or **Magic Link** powered by Supabase Auth.
-* The Web UI attaches the Supabase session access token (`Authorization: Bearer <supabase_jwt>`) to API requests.
-* Fastify verifies the JWT signature against `SUPABASE_JWT_SECRET` (or JWKS) and maps `sub` (`supabase_auth_id`) to the internal `users` record.
+### 5.1 Web Command Center Authentication (Firebase Auth / Identity Platform)
+* Users sign in to the Next.js Web UI with **Continue with Google** or an **email sign-in link**, both powered by Firebase Authentication (Google Cloud Identity Platform). Firebase only proves identity; volt keeps its own `users` table and PBAC scopes.
+* The Web UI attaches the current Firebase ID token (`Authorization: Bearer <firebase_id_token>`) to API requests. The Firebase SDK refreshes it before its one-hour expiry; `onIdTokenChanged` keeps the session in sync.
+* Fastify verifies the token with `firebase-admin` `verifyIdToken` against `FIREBASE_PROJECT_ID` (RS256 signature from Google's public keys, issuer, audience, expiry). Tokens without a verified email are rejected. No shared secret exists, so forged or unsigned JWTs cannot pass.
+* The Firebase `uid` maps to `users.auth_provider_uid` (provider-neutral, `TEXT`). On first sign-in a pre-provisioned row with the same verified email is linked once; an email already linked to a different uid is refused. Otherwise a new user joins the `core-contributor` group.
+* **Dev header:** `x-volt-user-id: <uuid>` impersonation is honoured only when `NODE_ENV=development` and ignored everywhere else.
 
 ### 5.2 CLI (`volt`), MCP (`volt-mcp`), and Mac Overlay Authentication (`volt_sk_*`)
 * Users generate Personal API Keys in the Web UI (**Settings $\rightarrow$ API Keys**) or via `volt login` (browser device-code / callback handoff).

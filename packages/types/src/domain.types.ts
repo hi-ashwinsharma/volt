@@ -48,7 +48,7 @@ export type CycleStatus = (typeof CYCLE_STATUSES)[number];
 
 export interface UserRecord {
   readonly id: string;
-  readonly supabaseAuthId: string | null;
+  readonly authProviderUid: string | null;
   readonly handle: string;
   readonly fullName: string;
   readonly email: string;

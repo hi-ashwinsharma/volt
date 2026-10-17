@@ -1,4 +1,5 @@
 import type { AuthMeResponse } from "./api.types";
+import type { SignInActions } from "./auth.types";
 import type { PermissionScope } from "./pbac.types";
 
 export type SemanticColor = "default" | "accent" | "success" | "warning" | "danger";
@@ -52,11 +53,11 @@ export interface AsyncResource<T> {
 
 export type SessionStatus = "loading" | "anonymous" | "authenticated";
 
-export interface SessionContextValue {
+export interface SessionContextValue extends SignInActions {
   readonly status: SessionStatus;
   readonly me: AuthMeResponse | null;
   readonly error: string | null;
-  readonly signIn: (apiKey: string) => Promise<boolean>;
+  readonly firebaseEnabled: boolean;
   readonly signOut: () => void;
   readonly hasScope: (scope: PermissionScope) => boolean;
   readonly refresh: () => void;

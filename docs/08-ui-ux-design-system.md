@@ -50,4 +50,10 @@ All routes are constants in `AppRoutes` (`@volt/types`).
 
 ## 3. Authentication
 
-The web app signs in with a personal API key (`volt_sk_*`) validated against `GET /v1/auth/me`; the key is kept in browser storage. Supabase SSO is the planned replacement.
+The sign-in page offers, in order:
+
+1. **Continue with Google** (primary `Button`) through Firebase Auth `signInWithPopup`.
+2. **Email me a sign-in link** (`TextField` + secondary `Button`) through Firebase email-link sign-in; the link returns to the sign-in route and completes there.
+3. **Use a personal API key** inside a `Disclosure`, for admins and machine accounts. The key (`volt_sk_*`) is validated against `GET /v1/auth/me` and kept in browser storage.
+
+`SessionProvider` listens to `onIdTokenChanged`; `lib/api-client.ts` sends the current Firebase ID token as `Bearer` and falls back to the stored API key. Sign-out clears the key and signs out of Firebase. When the `NEXT_PUBLIC_FIREBASE_*` variables are unset, only the API-key form is shown.

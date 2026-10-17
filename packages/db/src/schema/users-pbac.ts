@@ -13,7 +13,7 @@ import { workDomainEnum } from "./enums";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
-  supabaseAuthId: uuid("supabase_auth_id").unique(),
+  authProviderUid: text("auth_provider_uid").unique(),
   handle: varchar("handle", { length: 50 }).notNull().unique(),
   fullName: varchar("full_name", { length: 100 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
