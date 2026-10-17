@@ -26,31 +26,20 @@ All rules below are mechanically enforced by [`scripts/quality-gate.ts`](./scrip
 
 5. **Strict Emoji Ban**:
    - Never use Unicode emojis anywhere in code, UI labels, CLI output, or commit messages.
-   - Use `lucide-react` vector icons in `@volt/web` and `@volt/mac-overlay`, and clean ASCII indicators (`[OK]`, `[WARN]`) in `@volt/cli`.
+   - Use `@gravity-ui/icons` (the icon set used in HeroUI's docs) in `@volt/web` and `@volt/mac-overlay`, and clean ASCII indicators (`[OK]`, `[WARN]`) in `@volt/cli`.
 
 ---
 
-## 2. UI/UX Philosophy: Don Norman's *Design of Everyday Things* + Apple HIG
+## 2. Frontend: Pure HeroUI v3 (No Other Design System)
 
-When building or modifying any frontend surface (`apps/web/`, `apps/mac-overlay/`), read [`apps/web/AGENTS.md`](./apps/web/AGENTS.md) and activate the `.agents/skills/apple-norman-ui-engineering/SKILL.md` skill:
+`apps/web/` is built exclusively with **HeroUI v3** (`@heroui/react` + `@heroui/styles`, Tailwind CSS v4). Before any frontend work, read [`.agents/rules/heroui-react.md`](./.agents/rules/heroui-react.md) and use the HeroUI MCP server (`get_component_docs`, `get_theme_variables`).
 
-1. **Eliminate the "Mocked / Template" Feel — Let Elements Live in Open Air**:
-   - Do not trap every piece of information inside stacked, claustrophobic rectangles.
-   - Let section headers, hero telemetry, timelines, and filter rails breathe **directly on the open canvas** (`#F5F5F7` in Light Mode, `#0A0A0C` in Dark Mode). Reserve elevated glass cards (`.apple-surface`, `.apple-composer`) for interactive workbenches, composers, and focused artifacts.
-   - Utilize desktop screen width (`max-w-[1360px]`) with asymmetric multi-column layouts (e.g., open-air timeline + live staging rail on `/`, Master-Detail Split Evaluation Workbench on `/reviews`).
-
-2. **Don Norman's 7 Interaction Principles**:
-   - **Discoverability & Signifiers**: Never display cryptic abbreviations (`C:8 * I:2.0 * E:1.2`) without human-readable labels (*Complexity*, *Impact*, *Proof*, *Consensus*, *Timeliness*). Every interactive element must look interactive.
-   - **Conceptual Model (Bridge the Gulf of Execution & Evaluation)**: Users must visually see *how* micro-logs (`volt add`) accumulate in a live staging buffer and bundle into a daily scored Deliverable (`volt commit`).
-   - **Natural Mapping & Constraints**: Group controls spatially next to the live readout they affect (e.g., interactive parameter pills directly beside the live $W_c$ score preview). Explain constraints clearly (e.g., why a commit is locked by the PBAC Conflict-of-Interest guard or why ` Approve ` requires a 5+ character audit note).
-
-3. **Right Color in the Right Place (Calibrated Semantic Pigments, Not Monotone)**:
-   - Keep 90% of the structural canvas and typography in Apple's neutral hierarchy (`#F5F5F7` / `#1D1D1F`), and deploy **calibrated semantic colors** purposefully where they carry immediate meaning:
-     - **System Emerald (`#28CD41` light / `#30D158` dark)**: Verified status, `OUTPUT` engineering deliverables, and positive weightage/payout gains.
-     - **System Indigo (`#5856D6` light / `#BF5AF2` dark)**: `INSIGHT (R&D)` epistemic discoveries and empirical `.ipynb` research notebooks.
-     - **System Blue (`#007AFF` light / `#0A84FF` dark)**: Verifiable GitHub Pull Request links, CI check badges, and interactive focus states.
-     - **System Amber (`#FF9500` light / `#FF9F0A` dark)**: Items requiring human intervention (Pending Peer Review $>15\text{ pts}$, 24h Co-Author Handshake).
-     - **System Red (`#FF3B30` light / `#FF453A` dark)**: Destructive actions (`Reject`, `Revoke`) and anti-gaming flags.
+1. **Components**: Use HeroUI compound components (`Card.Header`, `Table.Row`, ...) for every UI element. Do not hand-roll buttons, inputs, tables, overlays or navigation that HeroUI already provides. No other component library.
+2. **Tokens only**: Colors, radius, shadows, spacing and typography come from HeroUI semantic tokens (`bg-background`, `bg-surface`, `text-muted`, `bg-accent`, `text-success`, `border-separator`, `rounded-lg`, ...). Never write hex/rgb/oklch literals or arbitrary values (`bg-[#...]`, `p-[13px]`) in components.
+3. **Theme**: The only theme source is `apps/web/src/styles/theme.css`, exported from the HeroUI Theme Builder. Light/dark follows the OS (`next-themes`, `attribute="class"`, `defaultTheme="system"`). Do not override component styles via BEM classes unless HeroUI documents that pattern for the case.
+4. **Semantic color meaning**: `success` = verified / approved / gains, `warning` = needs human action (peer review, co-author handshake), `danger` = destructive actions and anti-gaming flags, `accent` = primary action and focus. Everything else stays neutral.
+5. **Density**: HeroUI default spacing; data-heavy surfaces (tables, lists) use HeroUI's documented `size="sm"` variants.
+6. **Accessibility**: Rely on HeroUI's React Aria primitives; every icon-only button has `aria-label`, and every abbreviation (C, I, E, V, D) has a visible human-readable label.
 
 ---
 
